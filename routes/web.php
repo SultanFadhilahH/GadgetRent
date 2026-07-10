@@ -8,7 +8,8 @@ use App\Http\Controllers\RentalController;
 use App\Http\Controllers\Admin\LaporanController;
 
 Route::get('/', function () {
-    return view('welcome');
+    $gadgets = \App\Models\Gadget::with('category')->take(5)->get(); // Fetch 5 gadgets
+    return view('welcome', compact('gadgets'));
 });
 
 Route::get('/dashboard', function () {
