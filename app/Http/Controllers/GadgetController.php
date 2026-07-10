@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class GadgetController extends Controller
 {
-    // READ: Menampilkan semua data gadget
     public function index(Request $request)
     {
         $categories = Category::all();
@@ -18,8 +17,15 @@ class GadgetController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $gadgets = $query->get();
-        $totalUnit = $gadgets->count();
+        if ($request->has('search') && $request->search != '') {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('brand', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $totalUnit = Gadget::count();
+        $gadgets = $query->paginate(5)->appends($request->all());
 
         return view('gadgets.index', compact('gadgets', 'categories', 'totalUnit'));
     }
