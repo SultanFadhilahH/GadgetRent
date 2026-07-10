@@ -61,8 +61,8 @@
     {{-- ================= CHART SCRIPT ================= --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const labels = @json($chartLabels ?? ['Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul']);
-            const values = @json($chartValues ?? [3, 4, 3, 5, 4, 6]);
+            const labels = {!! json_encode($chartLabels ?? ['Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul']) !!};
+            const values = {!! json_encode($chartValues ?? [3, 4, 3, 5, 4, 6]) !!};
 
             const ctx = document.getElementById('laporanChart');
             if (!ctx || typeof Chart === 'undefined') return;
