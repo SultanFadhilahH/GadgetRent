@@ -17,8 +17,19 @@ class RentalController extends Controller
             $query->where('status', $request->status);
         }
 
-        $rentals = $query->latest()->get();
-        $totalTransaksi = $rentals->count();
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('customer', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })->orWhereHas('gadget', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $totalTransaksi = Rental::count();
+        $rentals = $query->latest()->paginate(5)->appends($request->all());
 
         return view('rentals.index', compact('rentals', 'totalTransaksi'));
     }

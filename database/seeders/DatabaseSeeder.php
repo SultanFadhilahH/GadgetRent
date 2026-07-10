@@ -6,8 +6,10 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Gadget;
 use App\Models\User;
+use App\Support\PermissionLabel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -18,13 +20,38 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // ========================================
-        // 1. Pembuatan Role Spatie
+        // 1. Pembuatan Hak Akses (Permissions)
         // ========================================
-        Role::create(['name' => 'Admin']);
-        Role::create(['name' => 'Staff']);
+        $adminPermissionNames = [
+            'manage-categories-gadgets',
+            'manage-rentals',
+            'manage-returns-fines',
+            'manage-users-roles',
+            'full-reports-access',
+        ];
+
+        $staffPermissionNames = [
+            'create-manage-transactions',
+            'view-gadget-status',
+            'process-returns-fines',
+            'manage-customer-data',
+        ];
+
+        foreach (array_keys(PermissionLabel::MAP) as $permissionName) {
+            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
+        }
 
         // ========================================
-        // 2. Akun Admin
+        // 2. Pembuatan Role Spatie
+        // ========================================
+        $adminRole = Role::create(['name' => 'Admin']);
+        $adminRole->syncPermissions($adminPermissionNames);
+
+        $staffRole = Role::create(['name' => 'Staff']);
+        $staffRole->syncPermissions($staffPermissionNames);
+
+        // ========================================
+        // 3. Akun Admin
         // ========================================
         $admin = User::create([
             'name' => 'Admin Toko',
@@ -34,7 +61,7 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole('Admin');
 
         // ========================================
-        // 3. Akun Staff
+        // 4. Akun Staff
         // ========================================
         $staff = User::create([
             'name' => 'Staff Kasir',
@@ -44,7 +71,16 @@ class DatabaseSeeder extends Seeder
         $staff->assignRole('Staff');
 
         // ========================================
-        // 4. Data Dummy Category (3 Kategori)
+        // 5. Akun Pengguna Tanpa Peran (contoh)
+        // ========================================
+        User::create([
+            'name' => 'sultan',
+            'email' => 'sultan123@gmail.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        // ========================================
+        // 6. Data Dummy Category (3 Kategori)
         // ========================================
         $kamera = Category::create([
             'name' => 'Kamera',
@@ -62,7 +98,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ========================================
-        // 5. Data Dummy Gadget (5 Gadget Realistis)
+        // 7. Data Dummy Gadget (5 Gadget Realistis)
         // ========================================
         Gadget::create([
             'category_id' => $kamera->id,
@@ -110,7 +146,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // ========================================
-        // 6. Data Dummy Customer (2 Pelanggan)
+        // 8. Data Dummy Customer (2 Pelanggan)
         // ========================================
         Customer::create([
             'name' => 'Daren Safana Darmawan',
