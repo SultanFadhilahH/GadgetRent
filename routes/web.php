@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GadgetController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\Admin\LaporanController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,4 +29,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
 });
+Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('admin.')->group(function () {
+    Route::get('/manajemen-user', [UserManagementController::class, 'index'])->name('users.index');
+    Route::post('/manajemen-user/roles', [UserManagementController::class, 'storeRole'])->name('users.roles.store');
+    Route::put('/manajemen-user/roles/{role}', [UserManagementController::class, 'updateRolePermissions'])->name('users.roles.update');
+    Route::post('/manajemen-user/users', [UserManagementController::class, 'storeUser'])->name('users.users.store');
+    Route::put('/manajemen-user/users/{user}/role', [UserManagementController::class, 'updateUserRole'])->name('users.users.updateRole');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
+    Route::post('/laporan/export-bulanan', [LaporanController::class, 'exportBulanan'])->name('laporan.export-bulanan');
+    Route::post('/laporan/export-semua', [LaporanController::class, 'exportSemua'])->name('laporan.export-semua');
+});
+
 require __DIR__.'/auth.php';
