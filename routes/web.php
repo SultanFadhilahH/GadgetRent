@@ -21,14 +21,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    // Menggunakan resource route untuk menangani seluruh fungsi CRUD
-    Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
-});
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('admin.')->group(function () {
     Route::get('/manajemen-user', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/manajemen-user/roles', [UserManagementController::class, 'storeRole'])->name('users.roles.store');
@@ -38,6 +30,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
     Route::post('/laporan/export-bulanan', [LaporanController::class, 'exportBulanan'])->name('laporan.export-bulanan');
     Route::post('/laporan/export-semua', [LaporanController::class, 'exportSemua'])->name('laporan.export-semua');
+    Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
+    Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
 });
 
 require __DIR__.'/auth.php';

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-slate-950 text-slate-200" x-data="{ sidebarOpen: false }">
+<body class="font-sans antialiased bg-[#12141c] text-gray-200" x-data="{ sidebarOpen: false }">
 
     <div class="min-h-screen lg:flex">
 
@@ -25,11 +25,7 @@
             @click="sidebarOpen = false"
         ></div>
 
-        <aside
-            class="fixed inset-y-0 left-0 z-50 w-64 shrink-0 transform bg-slate-950 border-r border-slate-800/80 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            x-cloak
-        >
+        <aside class="fixed inset-y-0 left-0 z-50 w-64 shrink-0 transform bg-[#1a1d26] border-r border-gray-800 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" x-cloak>
             <div class="flex h-full flex-col">
                 <!-- Logo -->
                 <div class="flex items-center gap-2 px-6 py-5">
@@ -41,11 +37,12 @@
                     <p class="px-2 pb-2 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Menu</p>
                     <ul class="space-y-1">
                         @php
+                            // Di sini nama rute disesuaikan dengan web.php Anda (menggunakan prefix admin.)
                             $menu = [
                                 ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'home'],
                                 ['label' => 'Kategori', 'route' => null, 'icon' => 'grid'],
-                                ['label' => 'Gadget', 'route' => null, 'icon' => 'device'],
-                                ['label' => 'Rental', 'route' => null, 'icon' => 'file'],
+                                ['label' => 'Gadget', 'route' => 'admin.gadgets.index', 'icon' => 'device'],
+                                ['label' => 'Rental', 'route' => 'admin.rentals.index', 'icon' => 'file'],
                                 ['label' => 'Pengembalian & Denda', 'route' => null, 'icon' => 'refresh'],
                                 ['label' => 'Customer', 'route' => null, 'icon' => 'users'],
                             ];
@@ -53,14 +50,13 @@
 
                         @foreach ($menu as $item)
                             @php
-                                $isActive = $item['route'] && request()->routeIs($item['route']);
+                                $isActive = $item['route'] && (request()->routeIs($item['route']) || (str_contains($item['route'], 'gadgets') && request()->routeIs('admin.gadgets.*')) || (str_contains($item['route'], 'rentals') && request()->routeIs('admin.rentals.*')));
                                 $href = $item['route'] ? route($item['route']) : '#';
                             @endphp
                             <li>
-                                
-                                    href="{{ $href }}"
-                                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition
-                                        {{ $isActive ? 'bg-slate-800/80 text-white' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200' }}"
+                                <a href="{{ $href }}"
+                                   class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition
+                                    {{ $isActive ? 'bg-[#222632] text-white border-l-4 border-amber-500 rounded-l-none' : 'text-gray-400 hover:bg-[#222632] hover:text-white transition' }}"
                                 >
                                     <x-admin-icon :name="$item['icon']" class="h-5 w-5 shrink-0" />
                                     <span>{{ $item['label'] }}</span>
@@ -72,17 +68,13 @@
                     <p class="px-2 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Sistem</p>
                     <ul class="space-y-1">
                         <li>
-                            
-                                href="{{ route('admin.users.index') }}"
-                                class="flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-sm font-medium transition
-                                    {{ request()->routeIs('admin.users.*') ? 'border-amber-500 bg-slate-800/80 text-white' : 'border-transparent text-slate-400 hover:bg-slate-900 hover:text-slate-200' }}"
-                            >
+                            <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition {{ request()->routeIs('admin.users.*') ? 'bg-[#222632] text-white border-l-4 border-amber-500 rounded-l-none' : 'text-gray-400 hover:bg-[#222632] hover:text-white transition' }}">
                                 <x-admin-icon name="user-cog" class="h-5 w-5 shrink-0" />
                                 <span>Manajemen User</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-slate-200">
+                            <a href="{{ route('admin.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition {{ request()->routeIs('admin.laporan*') ? 'bg-[#222632] text-white border-l-4 border-amber-500 rounded-l-none' : 'text-gray-400 hover:bg-[#222632] hover:text-white transition' }}">
                                 <x-admin-icon name="report" class="h-5 w-5 shrink-0" />
                                 <span>Laporan</span>
                             </a>
@@ -91,7 +83,7 @@
                 </nav>
 
                 <!-- User card -->
-                <div class="border-t border-slate-800/80 px-4 py-4">
+                <div class="border-t border-gray-800 bg-[#151821] px-4 py-4">
                     <div class="flex items-center gap-3 rounded-lg px-2 py-2">
                         <div class="flex h-9 w-9 items-center justify-center rounded-full bg-amber-500 text-xs font-bold text-slate-950">
                             {{ strtoupper(substr(auth()->user()->name ?? 'AT', 0, 2)) }}
@@ -115,7 +107,7 @@
         <div class="flex min-w-0 flex-1 flex-col">
 
             {{-- Topbar --}}
-            <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/95 backdrop-blur">
+            <header class="sticky top-0 z-30 border-b border-gray-800 bg-[#12141c]/95 backdrop-blur">
                 <div class="flex items-center gap-3 px-4 py-3 sm:px-6">
                     <button class="text-slate-400 hover:text-white lg:hidden" @click="sidebarOpen = true">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -124,7 +116,7 @@
                     </button>
 
                     <div class="flex flex-1 justify-center sm:justify-center">
-                        <div class="inline-flex rounded-full border border-slate-800 bg-slate-900 p-1 text-xs font-semibold">
+                        <div class="inline-flex rounded-full border border-gray-800 bg-[#1a1d26] p-1 text-xs font-semibold">
                             <span class="rounded-full bg-amber-500 px-3 py-1.5 text-slate-950 sm:px-4">ADMIN</span>
                             <span class="cursor-not-allowed rounded-full px-3 py-1.5 text-slate-500 sm:px-4">STAFF</span>
                             <span class="hidden cursor-not-allowed rounded-full px-3 py-1.5 text-slate-500 sm:block sm:px-4">CUSTOMER</span>

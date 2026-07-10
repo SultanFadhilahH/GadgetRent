@@ -1,4 +1,5 @@
-<x-app-layout>
+@extends('layouts.admin')
+    @section('content')
     @if(session('success'))
         <div class="mb-4 p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg text-sm flex justify-between items-center">
             <span>{{ session('success') }}</span>
@@ -17,12 +18,12 @@
     </div>
 
     <div class="flex gap-2 mb-6">
-        <a href="{{ route('gadgets.index') }}"
+        <a href="{{ route('admin.gadgets.index') }}"
            class="px-4 py-1.5 rounded-full text-xs font-medium transition border {{ !request('category_id') ? 'bg-amber-500 text-[#12141c] border-amber-500' : 'bg-[#1a1d26] text-gray-400 hover:text-white border-gray-800' }}">
             Semua
         </a>
         @foreach($categories as $cat)
-            <a href="{{ route('gadgets.index', ['category_id' => $cat->id]) }}"
+            <a href="{{ route('admin.gadgets.index', ['category_id' => $cat->id]) }}"
                class="px-4 py-1.5 rounded-full text-xs font-medium transition border {{ request('category_id') == $cat->id ? 'bg-amber-500 text-[#12141c] border-amber-500' : 'bg-[#1a1d26] text-gray-400 hover:text-white border-gray-800' }}">
                 {{ $cat->name }}
             </a>
@@ -85,7 +86,7 @@
                                 </button>
 
                                 <!-- Tombol Hapus dengan Ikon Tempat Sampah Modern -->
-                                <form action="{{ route('gadgets.destroy', $gadget->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus unit ini?')">
+                                <form action="{{ route('admin.gadgets.destroy', $gadget->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus unit ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -199,7 +200,7 @@
 
             if (mode === 'add') {
                 title.innerText = 'Tambah Gadget';
-                form.action = "{{ route('gadgets.store') }}";
+                form.action = "{{ route('admin.gadgets.store') }}";
                 methodField.innerHTML = '';
                 form.reset();
             } else if (mode === 'edit') {
@@ -220,4 +221,4 @@
             document.getElementById('gadgetModal').classList.add('hidden');
         }
     </script>
-</x-app-layout>
+@endsection

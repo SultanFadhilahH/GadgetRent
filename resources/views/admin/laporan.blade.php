@@ -1,4 +1,8 @@
-<x-admin-layout :title="'Laporan'" :role="'ADMIN'">
+@extends('layouts.admin')
+
+@section('title', 'Laporan Peminjaman')
+
+@section('content')
 
     {{-- ================= PAGE HEADING ================= --}}
     <div class="mb-6">
@@ -37,7 +41,9 @@
             </div>
             <button type="submit"
                 class="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-4 py-2.5 transition whitespace-nowrap">
-                <x-admin-icon name="download" class="h-4 w-4" />
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
                 Export Excel (Bulanan)
             </button>
         </form>
@@ -52,7 +58,9 @@
             </div>
             <button type="submit"
                 class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 hover:bg-white/5 text-slate-200 font-semibold text-sm px-4 py-2.5 transition whitespace-nowrap">
-                <x-admin-icon name="download" class="h-4 w-4" />
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
                 Export Excel (Semua Histori)
             </button>
         </form>
@@ -122,4 +130,4 @@
             });
         });
     </script>
-</x-admin-layout>
+@endsection

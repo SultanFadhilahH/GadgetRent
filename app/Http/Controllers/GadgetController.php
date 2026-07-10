@@ -38,7 +38,7 @@ class GadgetController extends Controller
 
         Gadget::create($request->all());
 
-        return redirect()->route('gadgets.index')->with('success', 'Gadget berhasil ditambahkan!');
+        return redirect()->route('admin.gadgets.index')->with('success', 'Gadget berhasil ditambahkan!');
     }
 
     // UPDATE: Menyimpan perubahan data gadget
@@ -55,7 +55,7 @@ class GadgetController extends Controller
 
         $gadget->update($request->all());
 
-        return redirect()->route('gadgets.index')->with('success', 'Gadget berhasil diperbarui!');
+        return redirect()->route('admin.gadgets.index')->with('success', 'Gadget berhasil diperbarui!');
     }
 
     // DELETE: Menghapus data gadget
@@ -63,6 +63,6 @@ class GadgetController extends Controller
     {
         $gadget->delete();
 
-        return redirect()->route('gadgets.index')->with('success', 'Gadget berhasil dihapus!');
+        return redirect()->route('admin.gadgets.index')->with('success', 'Gadget berhasil dihapus!');
     }
 }

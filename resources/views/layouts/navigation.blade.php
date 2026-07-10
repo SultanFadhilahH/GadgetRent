@@ -77,11 +77,11 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            @can('manage-users-roles')
+            {{-- @can('manage-users-roles')
                 <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                     {{ __('Manajemen User') }}
                 </x-responsive-nav-link>
-            @endcan
+            @endcan --}}
         </div>
 
         <!-- Responsive Settings Options -->

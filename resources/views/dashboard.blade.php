@@ -1,17 +1,25 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+@extends('layouts.admin')
+
+@section('title', 'Dashboard')
+
+@section('content')
+<div class="space-y-6">
+    <!-- Judul Halaman -->
+    <div>
+        <h2 class="text-xl font-bold tracking-tight text-white sm:text-2xl">
             {{ __('Dashboard') }}
         </h2>
-    </x-slot>
+        <p class="text-xs text-gray-400 mt-1">Selamat datang kembali di panel manajemen GadgetRent.</p>
+    </div>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
+    <!-- Kotak Pesan Logged In -->
+    <div class="overflow-hidden rounded-xl border border-gray-800 bg-[#1a1d26] shadow-sm">
+        <div class="p-6 text-gray-300">
+            <div class="flex items-center gap-3">
+                <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>{{ __("You're logged in!") }} Selamat bekerja, {{ auth()->user()->name }}.</span>
             </div>
         </div>
     </div>
-</x-app-layout>
+</div>
+@endsection

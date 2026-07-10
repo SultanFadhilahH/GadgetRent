@@ -1,23 +1,25 @@
-<x-app-layout>
+@extends('layouts.admin')
+
+@section('content')
     <div class="mb-8">
         <h1 class="text-2xl font-bold text-white tracking-wide">Rental</h1>
         <p class="text-sm text-gray-400 mt-1">Semua transaksi penyewaan gadget — dibuat oleh customer lewat dashboard user</p>
     </div>
 
     <div class="flex gap-2 mb-6">
-        <a href="{{ route('rentals.index') }}"
+        <a href="{{ route('admin.rentals.index') }}"
            class="px-4 py-1.5 rounded-full text-xs font-medium transition border {{ !request('status') ? 'bg-amber-500 text-[#12141c] border-amber-500' : 'bg-[#1a1d26] text-gray-400 hover:text-white border-gray-800' }}">
             Semua
         </a>
-        <a href="{{ route('rentals.index', ['status' => 'ongoing']) }}"
+        <a href="{{ route('admin.rentals.index', ['status' => 'ongoing']) }}"
            class="px-4 py-1.5 rounded-full text-xs font-medium transition border {{ request('status') == 'ongoing' ? 'bg-amber-500 text-[#12141c] border-amber-500' : 'bg-[#1a1d26] text-gray-400 hover:text-white border-gray-800' }}">
             Ongoing
         </a>
-        <a href="{{ route('rentals.index', ['status' => 'completed']) }}"
+        <a href="{{ route('admin.rentals.index', ['status' => 'completed']) }}"
            class="px-4 py-1.5 rounded-full text-xs font-medium transition border {{ request('status') == 'completed' ? 'bg-amber-500 text-[#12141c] border-amber-500' : 'bg-[#1a1d26] text-gray-400 hover:text-white border-gray-800' }}">
             Completed
         </a>
-        <a href="{{ route('rentals.index', ['status' => 'overdue']) }}"
+        <a href="{{ route('admin.rentals.index', ['status' => 'overdue']) }}"
            class="px-4 py-1.5 rounded-full text-xs font-medium transition border {{ request('status') == 'overdue' ? 'bg-amber-500 text-[#12141c] border-amber-500' : 'bg-[#1a1d26] text-gray-400 hover:text-white border-gray-800' }}">
             Overdue
         </a>
@@ -223,4 +225,4 @@
             document.getElementById('detailRentalModal').classList.add('hidden');
         }
     </script>
-</x-app-layout>
+@endsection
