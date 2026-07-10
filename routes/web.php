@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GadgetController;
+use App\Http\Controllers\RentalController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,4 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Menggunakan resource route untuk menangani seluruh fungsi CRUD
+    Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
+});
 require __DIR__.'/auth.php';

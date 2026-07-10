@@ -113,17 +113,24 @@ class DatabaseSeeder extends Seeder
         // 6. Data Dummy Customer (2 Pelanggan)
         // ========================================
         Customer::create([
-            'name' => 'Budi Santoso',
+            'name' => 'Daren Safana Darmawan',
             'nik' => '3201234567890001',
             'phone_number' => '081234567890',
             'address' => 'Jl. Merdeka No. 10, Bandung',
         ]);
 
         Customer::create([
-            'name' => 'Siti Rahayu',
+            'name' => 'Darel Safana Darmawan',
             'nik' => '3201234567890002',
             'phone_number' => '082345678901',
             'address' => 'Jl. Asia Afrika No. 25, Bandung',
+        ]);
+
+        // ========================================
+        // 7. Panggil RentalSeeder yang baru dibuat
+        // ========================================
+        $this->call([
+            RentalSeeder::class,
         ]);
     }
 }
