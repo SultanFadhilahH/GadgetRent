@@ -16,13 +16,34 @@ class UserManagementController extends Controller
     /**
      * Tampilkan halaman Manajemen User.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $roles = Role::with('permissions')->withCount('users')->orderBy('name')->get();
-        $permissions = Permission::orderBy('name')->get();
-        $users = User::with('roles')->orderByDesc('created_at')->get();
+        $roles = Role::orderBy('name')->get();
+        
+        $queryStaff = User::with('roles')->whereHas('roles', function($q) {
+            $q->whereIn('name', ['Admin', 'Staff']);
+        })->orderByDesc('created_at');
+        
+        $queryUser = User::with('roles')->whereDoesntHave('roles', function($q) {
+            $q->whereIn('name', ['Admin', 'Staff']);
+        })->orderByDesc('created_at');
+        
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $queryStaff->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+            $queryUser->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
 
-        return view('admin.users.index', compact('roles', 'permissions', 'users'));
+        $staffs = $queryStaff->paginate(5, ['*'], 'staff_page')->appends($request->all());
+        $users = $queryUser->paginate(5, ['*'], 'user_page')->appends($request->all());
+
+        return view('admin.users.index', compact('roles', 'staffs', 'users'));
     }
 
     /**

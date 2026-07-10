@@ -1,9 +1,24 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="mb-8">
-        <h1 class="text-2xl font-bold text-white tracking-wide">Rental</h1>
-        <p class="text-sm text-gray-400 mt-1">Semua transaksi penyewaan gadget — dibuat oleh customer lewat dashboard user</p>
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-wide">Rental</h1>
+            <p class="text-sm text-gray-400 mt-1">Semua transaksi penyewaan gadget — dibuat oleh customer lewat dashboard user</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <form action="{{ route('admin.rentals.index') }}" method="GET" class="relative">
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama customer atau gadget..." class="bg-[#1a1d26] border border-gray-800 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-72 pl-10 py-2 px-3 text-white">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div class="flex gap-2 mb-6">
@@ -103,6 +118,9 @@
 
                 </tbody>
             </table>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-800">
+            {{ $rentals->links() }}
         </div>
     </div>
 

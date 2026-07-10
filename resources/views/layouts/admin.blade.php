@@ -116,16 +116,8 @@
                     </button>
 
                     <div class="flex flex-1 justify-center sm:justify-center">
-                        <div class="inline-flex rounded-full border border-gray-800 bg-[#1a1d26] p-1 text-xs font-semibold">
-                            <span class="rounded-full bg-amber-500 px-3 py-1.5 text-slate-950 sm:px-4">ADMIN</span>
-                            <span class="cursor-not-allowed rounded-full px-3 py-1.5 text-slate-500 sm:px-4">STAFF</span>
-                            <span class="hidden cursor-not-allowed rounded-full px-3 py-1.5 text-slate-500 sm:block sm:px-4">CUSTOMER</span>
-                        </div>
+                        <!-- Role indicator removed -->
                     </div>
-
-                    <span class="hidden shrink-0 text-xs text-slate-500 lg:block">
-                        Panel Admin &mdash; {{ now()->locale('id')->translatedFormat('d M Y') }}
-                    </span>
                 </div>
             </header>
 
