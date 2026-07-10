@@ -27,4 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
 });
+
+Route::get('/about', function () {
+    return view('customer.about'); // Sesuaikan dengan folder tempat kamu menyimpan file about tadi
+})->name('customer.about');
+
 require __DIR__.'/auth.php';
