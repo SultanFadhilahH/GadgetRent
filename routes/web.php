@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GadgetController;
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\Admin\LaporanController;
 
 Route::get('/', function () {
@@ -19,6 +21,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Menggunakan resource route untuk menangani seluruh fungsi CRUD
+    Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
+});
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('admin.')->group(function () {
     Route::get('/manajemen-user', [UserManagementController::class, 'index'])->name('users.index');
     Route::post('/manajemen-user/roles', [UserManagementController::class, 'storeRole'])->name('users.roles.store');

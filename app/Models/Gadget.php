@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Gadget extends Model
 {
@@ -17,22 +15,12 @@ class Gadget extends Model
         'brand',
         'serial_number',
         'price_per_day',
-        'status',
+        'status'
     ];
 
-    /**
-     * Get the category that owns this gadget.
-     */
-    public function category(): BelongsTo
+    // Hubungkan relasi ke tabel categories
+    public function category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * Get the rentals for this gadget.
-     */
-    public function rentals(): HasMany
-    {
-        return $this->hasMany(Rental::class);
     }
 }
