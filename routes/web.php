@@ -8,9 +8,13 @@ use App\Http\Controllers\RentalController;
 use App\Http\Controllers\Admin\LaporanController;
 
 Route::get('/', function () {
-    $gadgets = \App\Models\Gadget::with('category')->take(5)->get(); // Fetch 5 gadgets
-    return view('welcome', compact('gadgets'));
+    $gadgets = \App\Models\Gadget::with('category')->take(5)->get();
+    return view('customer.home', compact('gadgets'));
 });
+
+Route::get('/tentang-kami', function () {
+    return view('customer.about');
+})->name('about');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
