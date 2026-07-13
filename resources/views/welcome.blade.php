@@ -9,21 +9,21 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-[#12141c] text-gray-200 flex flex-col min-h-screen">
-    
+
     <!-- Navbar -->
     <nav class="border-b border-gray-800 bg-[#12141c] py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-2">
             <span class="flex h-4 w-4 rotate-45 items-center justify-center rounded-sm bg-amber-500"></span>
             <span class="text-sm font-bold tracking-wide text-white uppercase">GADGETRENT</span>
         </div>
-        
+
         <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
             <a href="#" class="text-white border-b-2 border-amber-500 pb-1">Home</a>
             <a href="#" class="hover:text-white transition">Katalog</a>
             <a href="#" class="hover:text-white transition">Blog</a>
             <a href="#" class="hover:text-white transition">Tentang Kami</a>
         </div>
-        
+
         <div class="flex items-center gap-4">
             <button class="flex items-center gap-2 text-sm font-medium bg-[#1a1d26] border border-gray-700 px-4 py-2 rounded-lg hover:bg-gray-800 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -39,31 +39,42 @@
                         <span class="text-sm font-bold text-white hidden sm:block">{{ auth()->user()->name }}</span>
                         <svg class="w-4 h-4 text-gray-400 hidden sm:block transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
-                    
+
                     <!-- Dropdown Menu -->
-                    <div
-                        x-show="open"
-                        x-transition:enter="transition ease-out duration-100"
-                        x-transition:enter-start="opacity-0 scale-95"
-                        x-transition:enter-end="opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-75"
-                        x-transition:leave-start="opacity-100 scale-100"
-                        x-transition:leave-end="opacity-0 scale-95"
-                        class="absolute right-0 mt-2 w-44 bg-[#1a1d26] border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden"
-                        x-cloak
-                    >
-                        <div class="px-4 py-3 border-b border-gray-800">
-                            <p class="text-xs text-gray-400">Masuk sebagai</p>
-                            <p class="text-sm font-bold text-white truncate">{{ auth()->user()->name }}</p>
-                        </div>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition text-left">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                Logout
-                            </button>
-                        </form>
-                    </div>
+                    <!-- Dropdown Menu -->
+<div
+    x-show="open"
+    x-transition:enter="transition ease-out duration-100"
+    x-transition:enter-start="opacity-0 scale-95"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-75"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-95"
+    class="absolute right-0 mt-2 w-44 bg-[#1a1d26] border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden"
+    x-cloak
+>
+    <div class="px-4 py-3 border-b border-gray-800">
+        <p class="text-xs text-gray-400">Masuk sebagai</p>
+        <p class="text-sm font-bold text-white truncate">{{ auth()->user()->name }}</p>
+    </div>
+
+    <!-- TAHAPAN BARU: TAMBAHKAN LINK PROFILE INI -->
+    <a href="{{ route('profile.edit') }}" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition text-left border-b border-gray-800/50">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+        Profile Saya
+    </a>
+
+    <!-- Form Logout bawaan Anda -->
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition text-left">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Logout
+        </button>
+    </form>
+</div>
                 </div>
             @else
                 <a href="{{ route('login') }}" class="bg-amber-500 hover:bg-amber-600 text-[#12141c] font-bold text-sm px-5 py-2 rounded-lg transition">
@@ -77,7 +88,7 @@
     <section class="relative bg-cover bg-center py-20 md:py-0 md:h-[600px] flex items-center px-6 md:px-12" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');">
         <!-- Overlay for better text readability -->
         <div class="absolute inset-0 bg-gradient-to-r from-[#12141c] via-[#12141c]/90 to-[#12141c]/40 md:to-transparent"></div>
-        
+
         <div class="max-w-2xl relative z-10 pt-4 md:pt-0">
             <p class="text-amber-500 font-medium tracking-widest text-[10px] md:text-[11px] uppercase mb-4 flex items-center gap-2">
                 <span class="w-6 md:w-8 h-[1px] bg-amber-500"></span> Sewa Gadget, Bukan Beli
@@ -88,7 +99,7 @@
             <p class="text-gray-400 text-xs sm:text-sm md:text-base mb-6 md:mb-8 max-w-lg leading-relaxed">
                 Sewa kamera, laptop, dan konsol game harian dengan proses klaim seperti tiket — tinggal ambil, pakai, kembalikan.
             </p>
-            
+
             <div class="flex gap-6 md:gap-8 mb-8 text-sm">
                 <div>
                     <div class="text-xl md:text-2xl font-bold text-white mb-1">5</div>
@@ -129,7 +140,7 @@
                         <span class="absolute top-3 right-3 bg-emerald-500/10 text-emerald-400 text-[9px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1 uppercase tracking-wider">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> available
                         </span>
-                        
+
                         @if(strtolower($gadget->category->name ?? '') == 'kamera')
                             <svg class="w-14 h-14 text-gray-600 group-hover:text-gray-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         @elseif(strtolower($gadget->category->name ?? '') == 'laptop')
@@ -190,12 +201,12 @@
     <!-- Info Section (Cara Sewa + Review) -->
     <section class="py-16 px-6 md:px-12 bg-[#12141c]">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            
+
             <!-- Cara Sewa -->
             <div>
                 <h2 class="text-2xl font-bold text-white mb-2">Cara sewa di GadgetRent</h2>
                 <p class="text-sm text-gray-400 mb-10">Lima langkah sederhana dari memilih unit sampai unit kembali ke toko.</p>
-                
+
                 <div class="relative border-l border-gray-800 ml-4 space-y-8 pb-4">
                     <div class="relative pl-8">
                         <span class="absolute -left-3.5 top-0 flex items-center justify-center w-7 h-7 bg-[#1a1d26] border border-gray-700 text-gray-400 text-xs font-bold rounded-full">1</span>
@@ -249,7 +260,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Review 2 -->
                     <div class="bg-[#1a1d26] border border-gray-800 p-5 rounded-xl hover:border-gray-700 transition">
                         <div class="flex gap-1 text-amber-500 mb-3">
@@ -286,7 +297,7 @@
                     Sewa kamera, laptop, dan konsol game harian dengan proses klaim seperti tiket — tinggal ambil, pakai, kembalikan.
                 </p>
             </div>
-            
+
             <!-- Navigasi -->
             <div>
                 <h3 class="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-4">Navigasi</h3>
@@ -297,7 +308,7 @@
                     <li><a href="#" class="hover:text-amber-500 transition">Tentang Kami</a></li>
                 </ul>
             </div>
-            
+
             <!-- Bantuan -->
             <div>
                 <h3 class="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-4">Bantuan</h3>
@@ -308,7 +319,7 @@
                     <li><a href="#" class="hover:text-amber-500 transition">Kebijakan Privasi</a></li>
                 </ul>
             </div>
-            
+
             <!-- Kontak -->
             <div>
                 <h3 class="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-4">Kontak</h3>
