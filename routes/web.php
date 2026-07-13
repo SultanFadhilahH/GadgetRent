@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LaporanController;
 
 Route::get('/', function () {
     $gadgets = \App\Models\Gadget::with('category')->take(5)->get();
+    return view('welcome', compact('gadgets'));
     return view('customer.home', compact('gadgets'));
 });
 
@@ -24,6 +25,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // SATUKAN SEMUA RUTE KE PROFILE EDIT DENGAN PARAMETER QUERY
+    Route::get('/profile/identity-verification', [ProfileController::class, 'edit'])->name('profile.identity');
+    Route::get('/addresses', [ProfileController::class, 'edit'])->name('addresses.index');
+
+    // GANTI BAGIAN INI: Sekarang mengarah ke ProfileController agar tampilan layout-nya ikut ke-render
+    Route::get('/password/edit', [ProfileController::class, 'edit'])->name('password.edit');
+    Route::get('/orders', [ProfileController::class, 'edit'])->name('orders.index');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('admin.')->group(function () {
@@ -44,7 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/about', function () {
-    return view('customer.about'); // Sesuaikan dengan folder tempat kamu menyimpan file about tadi
+    return view('customer.about');
 })->name('customer.about');
 
 require __DIR__.'/auth.php';
