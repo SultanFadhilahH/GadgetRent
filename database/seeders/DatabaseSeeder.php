@@ -107,6 +107,8 @@ class DatabaseSeeder extends Seeder
             'serial_number' => 'SNY-A7III-20260001',
             'price_per_day' => 350000,
             'status' => 'available',
+            'description' => 'Kamera mirrorless full-frame andalan untuk foto dan video dengan performa low-light yang kuat serta autofokus cepat, cocok untuk konten kreator dan fotografer event.',
+            'specs' => ['Sensor full-frame 24.2MP', '4K 30fps', '5-axis stabilization', 'Body only'],
         ]);
 
         Gadget::create([
@@ -116,6 +118,8 @@ class DatabaseSeeder extends Seeder
             'serial_number' => 'CAN-R6MK2-20260002',
             'price_per_day' => 400000,
             'status' => 'available',
+            'description' => 'Kamera mirrorless serbaguna dengan autofokus cepat dan performa burst tinggi, cocok untuk foto aksi maupun video profesional.',
+            'specs' => ['Sensor full-frame 24.2MP', '4K 60fps', 'In-body stabilization', 'Body only'],
         ]);
 
         Gadget::create([
@@ -125,6 +129,8 @@ class DatabaseSeeder extends Seeder
             'serial_number' => 'APL-MBA-M2-20260003',
             'price_per_day' => 250000,
             'status' => 'available',
+            'description' => 'Laptop tipis dan ringan dengan chip Apple M2, cocok untuk kerja, desain, dan editing ringan tanpa perlu daya baterai besar.',
+            'specs' => ['Chip Apple M2', '8GB RAM', '256GB SSD', 'Layar 13.6" Liquid Retina'],
         ]);
 
         Gadget::create([
@@ -134,6 +140,8 @@ class DatabaseSeeder extends Seeder
             'serial_number' => 'SNY-PS5-20260004',
             'price_per_day' => 150000,
             'status' => 'available',
+            'description' => 'Konsol gaming generasi terbaru dengan loading super cepat dan grafis 4K, lengkap dengan satu unit controller DualSense.',
+            'specs' => ['4K 120fps', 'SSD ultra-cepat', '1x DualSense controller', 'Ray tracing'],
         ]);
 
         Gadget::create([
@@ -143,6 +151,8 @@ class DatabaseSeeder extends Seeder
             'serial_number' => 'NTD-SWOLED-20260005',
             'price_per_day' => 100000,
             'status' => 'available',
+            'description' => 'Konsol hybrid dengan layar OLED cerah, bisa dimainkan di TV atau mode genggam, cocok buat gaming bareng teman atau keluarga.',
+            'specs' => ['Layar OLED 7"', 'Mode TV & handheld', '2x Joy-Con', '64GB storage'],
         ]);
 
         // ========================================
