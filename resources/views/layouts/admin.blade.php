@@ -37,20 +37,25 @@
                     <p class="px-2 pb-2 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-500">Menu</p>
                     <ul class="space-y-1">
                         @php
-                            // Di sini nama rute disesuaikan dengan web.php Anda (menggunakan prefix admin.)
+                            // Sesuaikan nama rute dengan web.php
                             $menu = [
-                                ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'home'],
-                                ['label' => 'Kategori', 'route' => null, 'icon' => 'grid'],
-                                ['label' => 'Gadget', 'route' => 'admin.gadgets.index', 'icon' => 'device'],
-                                ['label' => 'Rental', 'route' => 'admin.rentals.index', 'icon' => 'file'],
-                                ['label' => 'Pengembalian & Denda', 'route' => null, 'icon' => 'refresh'],
-                                ['label' => 'Customer', 'route' => null, 'icon' => 'users'],
+                                ['label' => 'Dashboard',            'route' => 'admin.dashboard',    'icon' => 'home'],
+                                ['label' => 'Kategori',             'route' => null,                 'icon' => 'grid'],
+                                ['label' => 'Gadget',               'route' => 'admin.gadgets.index','icon' => 'device'],
+                                ['label' => 'Rental',               'route' => 'admin.rentals.index','icon' => 'file'],
+                                ['label' => 'Pengembalian & Denda', 'route' => null,                 'icon' => 'refresh'],
+                                ['label' => 'Customer',             'route' => null,                 'icon' => 'users'],
                             ];
                         @endphp
 
                         @foreach ($menu as $item)
                             @php
-                                $isActive = $item['route'] && (request()->routeIs($item['route']) || (str_contains($item['route'], 'gadgets') && request()->routeIs('admin.gadgets.*')) || (str_contains($item['route'], 'rentals') && request()->routeIs('admin.rentals.*')));
+                                $isActive = $item['route'] && (
+                                    request()->routeIs($item['route'])
+                                    || ($item['route'] === 'admin.dashboard' && request()->routeIs('dashboard'))
+                                    || (str_contains((string)$item['route'], 'gadgets') && request()->routeIs('admin.gadgets.*'))
+                                    || (str_contains((string)$item['route'], 'rentals') && request()->routeIs('admin.rentals.*'))
+                                );
                                 $href = $item['route'] ? route($item['route']) : '#';
                             @endphp
                             <li>
