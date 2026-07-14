@@ -8,6 +8,7 @@ use App\Http\Controllers\RentalController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Customer\CatalogController;
 
 Route::get('/', function () {
     $gadgets = \App\Models\Gadget::with('category')->take(5)->get();
@@ -18,6 +19,8 @@ Route::get('/', function () {
 Route::get('/tentang-kami', function () {
     return view('customer.about');
 })->name('about');
+
+Route::get('/katalog', [CatalogController::class, 'index'])->name('catalog.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
