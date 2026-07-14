@@ -15,7 +15,8 @@ class Gadget extends Model
         'brand',
         'serial_number',
         'price_per_day',
-        'status'
+        'status',
+        'image',
     ];
 
     // Hubungkan relasi ke tabel categories

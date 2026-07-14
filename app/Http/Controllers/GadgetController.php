@@ -33,16 +33,21 @@ class GadgetController extends Controller
     // CREATE: Menyimpan data gadget baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'serial_number' => 'required|string|unique:gadgets,serial_number',
             'price_per_day' => 'required|numeric|min:0',
             'status' => 'required|in:available,rented,maintenance',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        Gadget::create($request->all());
+        if ($request->hasFile('image')) {
+            $validated['image'] = $this->storeImage($request->file('image'));
+        }
+
+        Gadget::create($validated);
 
         return redirect()->route('admin.gadgets.index')->with('success', 'Gadget berhasil ditambahkan!');
     }
@@ -50,16 +55,22 @@ class GadgetController extends Controller
     // UPDATE: Menyimpan perubahan data gadget
     public function update(Request $request, Gadget $gadget)
     {
-        $request->validate([
+        $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
             'brand' => 'required|string|max:255',
             'serial_number' => 'required|string|unique:gadgets,serial_number,' . $gadget->id,
             'price_per_day' => 'required|numeric|min:0',
             'status' => 'required|in:available,rented,maintenance',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $gadget->update($request->all());
+        if ($request->hasFile('image')) {
+            $this->deleteImage($gadget->image);
+            $validated['image'] = $this->storeImage($request->file('image'));
+        }
+
+        $gadget->update($validated);
 
         return redirect()->route('admin.gadgets.index')->with('success', 'Gadget berhasil diperbarui!');
     }
@@ -67,8 +78,24 @@ class GadgetController extends Controller
     // DELETE: Menghapus data gadget
     public function destroy(Gadget $gadget)
     {
+        $this->deleteImage($gadget->image);
         $gadget->delete();
 
         return redirect()->route('admin.gadgets.index')->with('success', 'Gadget berhasil dihapus!');
+    }
+
+    private function storeImage($file): string
+    {
+        $filename = uniqid('gadget_').'.'.$file->getClientOriginalExtension();
+        $file->move(public_path('images/gadgets'), $filename);
+
+        return $filename;
+    }
+
+    private function deleteImage(?string $filename): void
+    {
+        if ($filename && file_exists(public_path('images/gadgets/'.$filename))) {
+            unlink(public_path('images/gadgets/'.$filename));
+        }
     }
 }

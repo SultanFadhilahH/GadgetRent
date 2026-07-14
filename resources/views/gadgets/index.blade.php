@@ -66,8 +66,19 @@
                     @forelse($gadgets as $gadget)
                     <tr class="hover:bg-[#1f232e]/30 transition">
                         <td class="px-6 py-4">
-                            <div class="font-semibold text-white">{{ $gadget->name }}</div>
-                            <div class="text-xs text-gray-500">{{ $gadget->brand }}</div>
+                            <div class="flex items-center gap-3">
+                                @if ($gadget->image)
+                                    <img src="{{ asset('images/gadgets/'.$gadget->image) }}" alt="{{ $gadget->name }}" class="w-10 h-10 rounded-lg object-cover border border-gray-800 shrink-0">
+                                @else
+                                    <div class="w-10 h-10 rounded-lg bg-[#151821] border border-gray-800 flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                @endif
+                                <div>
+                                    <div class="font-semibold text-white">{{ $gadget->name }}</div>
+                                    <div class="text-xs text-gray-500">{{ $gadget->brand }}</div>
+                                </div>
+                            </div>
                         </td>
                         <td class="px-6 py-4 text-gray-300">{{ $gadget->category->name }}</td>
                         <td class="px-6 py-4 font-mono text-xs text-gray-400">{{ $gadget->serial_number }}</td>
@@ -137,11 +148,20 @@
                 <button onclick="closeModal()" class="text-gray-400 hover:text-white text-lg">✕</button>
             </div>
 
-            <form id="gadgetForm" method="POST" class="flex-1 flex flex-col overflow-hidden text-sm">
+            <form id="gadgetForm" method="POST" enctype="multipart/form-data" class="flex-1 flex flex-col overflow-hidden text-sm">
                 @csrf
                 <div id="methodField"></div>
 
                 <div class="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+                    <div>
+                        <label class="block text-gray-400 mb-1.5 font-medium">Foto Gadget</label>
+                        <div id="in_image_current" class="hidden mb-2">
+                            <img id="in_image_current_img" src="" alt="Foto saat ini" class="w-16 h-16 rounded-lg object-cover border border-gray-800">
+                            <p class="text-[11px] text-gray-500 mt-1">Foto saat ini &mdash; upload file baru buat menggantinya.</p>
+                        </div>
+                        <input type="file" name="image" id="in_image" accept="image/png,image/jpeg,image/webp" class="w-full text-xs text-gray-400 bg-[#12141c] border border-gray-800 rounded-lg px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-amber-500 file:text-[#12141c] file:text-xs file:font-semibold">
+                    </div>
+
                     <div>
                         <label class="block text-gray-400 mb-1.5 font-medium">Nama Gadget</label>
                         <input type="text" name="name" id="in_name" required class="w-full bg-[#12141c] border border-gray-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500">
@@ -211,6 +231,8 @@
             const form = document.getElementById('gadgetForm');
             const title = document.getElementById('modalTitle');
             const methodField = document.getElementById('methodField');
+            const currentImageWrap = document.getElementById('in_image_current');
+            const currentImageImg = document.getElementById('in_image_current_img');
 
             modal.classList.remove('hidden');
 
@@ -219,9 +241,10 @@
                 form.action = "{{ route('admin.gadgets.store') }}";
                 methodField.innerHTML = '';
                 form.reset();
+                currentImageWrap.classList.add('hidden');
             } else if (mode === 'edit') {
                 title.innerText = 'Edit Data Gadget';
-                form.action = `/gadgets/${data.id}`;
+                form.action = `{{ url('admin/gadgets') }}/${data.id}`;
                 methodField.innerHTML = '@method("PUT")';
 
                 document.getElementById('in_name').value = data.name;
@@ -230,6 +253,14 @@
                 document.getElementById('in_serial').value = data.serial_number;
                 document.getElementById('in_price').value = data.price_per_day;
                 document.getElementById('in_status').value = data.status;
+                document.getElementById('in_image').value = '';
+
+                if (data.image) {
+                    currentImageImg.src = `{{ asset('images/gadgets') }}/${data.image}`;
+                    currentImageWrap.classList.remove('hidden');
+                } else {
+                    currentImageWrap.classList.add('hidden');
+                }
             }
         }
 
