@@ -31,4 +31,11 @@ class CatalogController extends Controller
 
         return view('customer.catalog', compact('gadgets', 'categories', 'totalUnit'));
     }
+
+    public function show(Gadget $gadget)
+    {
+        $gadget->load('category');
+
+        return view('customer.catalog-show', compact('gadget'));
+    }
 }

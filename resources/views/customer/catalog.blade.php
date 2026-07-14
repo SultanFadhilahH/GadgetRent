@@ -123,7 +123,7 @@
                     ];
                     [$badgeClasses, $dotClass, $statusLabel] = $statusMap[$gadget->status] ?? $statusMap['available'];
                 @endphp
-                <div class="bg-[#1a1d26] border border-gray-800 rounded-xl overflow-hidden hover:border-gray-600 transition flex flex-col h-full group">
+                <a href="{{ route('catalog.show', $gadget) }}" class="bg-[#1a1d26] border border-gray-800 rounded-xl overflow-hidden hover:border-gray-600 transition flex flex-col h-full group">
                     <div class="relative bg-[#151821] aspect-square flex flex-col items-center justify-center p-4">
                         <span class="absolute top-3 right-3 {{ $badgeClasses }} text-[9px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 uppercase tracking-wider">
                             <span class="w-1.5 h-1.5 rounded-full {{ $dotClass }}"></span> {{ $statusLabel }}
@@ -146,13 +146,13 @@
                         <div class="flex items-end justify-between mt-auto">
                             <p class="text-sm font-bold text-white">Rp {{ number_format($gadget->price_per_day, 0, ',', '.') }}<span class="text-[9px] text-gray-500 font-normal"> /hari</span></p>
                             @if ($gadget->status == 'available')
-                                <button class="bg-amber-500 hover:bg-amber-600 text-[#12141c] text-xs font-bold px-3 py-1.5 rounded transition">Sewa</button>
+                                <span class="bg-amber-500 group-hover:bg-amber-600 text-[#12141c] text-xs font-bold px-3 py-1.5 rounded transition">Sewa</span>
                             @else
-                                <button disabled class="bg-gray-800 text-gray-500 text-xs font-bold px-3 py-1.5 rounded cursor-not-allowed">Sewa</button>
+                                <span class="bg-gray-800 text-gray-500 text-xs font-bold px-3 py-1.5 rounded">Sewa</span>
                             @endif
                         </div>
                     </div>
-                </div>
+                </a>
             @empty
                 <div class="col-span-full text-center py-16 text-gray-500 text-sm">
                     Tidak ada gadget yang cocok dengan pencarianmu.
