@@ -45,6 +45,7 @@
                                 ['label' => 'Rental',               'route' => 'admin.rentals.index',     'icon' => 'file'],
                                 ['label' => 'Pengembalian & Denda', 'route' => 'admin.returns.index',      'icon' => 'refresh'],
                                 ['label' => 'Customer',             'route' => 'admin.customers.index',   'icon' => 'users'],
+                                ['label' => 'Voucher',              'route' => 'admin.vouchers.index',     'icon' => 'tag'],
                             ];
                         @endphp
 
@@ -57,6 +58,7 @@
                                     || (str_contains((string)$item['route'], 'rentals')    && request()->routeIs('admin.rentals.*'))
                                     || (str_contains((string)$item['route'], 'categories') && request()->routeIs('admin.categories.*'))
                                     || (str_contains((string)$item['route'], 'customers')  && request()->routeIs('admin.customers.*'))
+                                    || (str_contains((string)$item['route'], 'vouchers')   && request()->routeIs('admin.vouchers.*'))
                                     || (str_contains((string)$item['route'], 'returns')     && request()->routeIs('admin.returns.*'))
                                 );
                                 $href = $item['route'] ? route($item['route']) : '#';
