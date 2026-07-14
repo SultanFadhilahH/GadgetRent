@@ -14,13 +14,16 @@ use App\Http\Controllers\RentalController;
 
 Route::get('/', function () {
     $gadgets = \App\Models\Gadget::with('category')->take(5)->get();
-    return view('welcome', compact('gadgets'));
     return view('customer.home', compact('gadgets'));
 });
 
 Route::get('/tentang-kami', function () {
     return view('customer.about');
 })->name('about');
+
+Route::get('/checkout', function () {
+    return view('customer.checkout');
+})->name('checkout');
 
 Route::get('/katalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/katalog/{gadget}', [CatalogController::class, 'show'])->name('catalog.show');
