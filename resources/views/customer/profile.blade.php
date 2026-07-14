@@ -125,15 +125,15 @@
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Username</label>
-                                    <input type="text" name="username" value="{{ old('username', Str::slug(auth()->user()->name, '')) }}" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
+                                    <input type="text" name="username" value="{{ old('username', auth()->user()->username ?? Str::slug(auth()->user()->name, '')) }}" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">NIK</label>
-                                    <input type="text" name="nik" placeholder="3201234567890001" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
+                                    <input type="text" name="nik" value="{{ old('nik', auth()->user()->nik) }}" placeholder="3201234567890001" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">No. HP</label>
-                                    <input type="text" name="phone" placeholder="081234567890" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
+                                    <input type="text" name="phone" value="{{ old('phone', auth()->user()->phone) }}" placeholder="081234567890" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Email</label>
@@ -141,14 +141,15 @@
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Tanggal Lahir</label>
-                                    <input type="date" name="birth_date" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition accent-[#e49322]">
+                                    <input type="date" name="birth_date" value="{{ old('birth_date', auth()->user()->birth_date ? \Carbon\Carbon::parse(auth()->user()->birth_date)->format('Y-m-d') : '') }}" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition accent-[#e49322]">
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Jenis Kelamin</label>
                                     <div class="relative">
                                         <select name="gender" class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition appearance-none">
-                                            <option value="Laki-laki">Laki-laki</option>
-                                            <option value="Perempuan">Perempuan</option>
+                                            <option value="" disabled {{ !auth()->user()->gender ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                                            <option value="Laki-laki" {{ auth()->user()->gender == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                            <option value="Perempuan" {{ auth()->user()->gender == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                         </select>
                                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#9ca3af]">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
@@ -182,35 +183,103 @@
                         <p class="text-[10px] text-[#556075] font-medium font-mono tracking-wider">Wajib untuk mengambil unit sewa</p>
                     </div>
 
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 bg-[#1c2e24]/40 border border-[#234e34] rounded-xl p-4 text-[#4ade80]">
-                            <div class="flex-shrink-0 bg-[#234e34] rounded-full p-1">
-                                <svg class="w-4 h-4 text-[#4ade80]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                            </div>
-                            <div class="text-xs">
-                                <span class="font-bold mr-2">Akun Terverifikasi</span>
-                                <span class="text-[#86efac]/80 font-medium">KTP diverifikasi 03 Jul 2026 — kamu bisa langsung checkout tanpa hambatan.</span>
-                            </div>
-                        </div>
+                    <div class="space-y-6" x-data="{
+                        isUploading: false,
+                        uploadError: '',
+                        handleUpload(e) {
+                            let file = e.target.files[0];
+                            if(!file) return;
 
-                        <p class="text-[10px] font-mono text-[#475166] hover:text-[#e49322] transition cursor-pointer select-none"></p>
+                            this.isUploading = true;
+                            this.uploadError = '';
 
-                        <div>
-                            <p class="text-[11px] font-bold text-[#9ca3af] mb-2.5">Dokumen Tersimpan</p>
-                            <div class="border border-dashed border-[#242b38] bg-[#161922] bg-stripes p-8 rounded-xl text-center flex flex-col items-center justify-center min-h-[160px]">
-                                <svg class="w-5 h-5 text-[#e49322] mb-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                                </svg>
-                                <span class="text-xs text-white font-bold block mb-0.5">ktp_budi_santoso.jpg</span>
-                                <span class="text-[10px] text-[#556075] font-mono block mb-4">Diunggah 03 Jul 2026 • Terverifikasi</span>
+                            let formData = new FormData();
+                            formData.append('ktp_image', file);
+                            formData.append('_token', '{{ csrf_token() }}');
 
-                                <button type="button" class="bg-[#202531] border border-[#2d3647] hover:border-[#e49322] text-white text-[11px] font-bold px-4 py-1.5 rounded-lg transition shadow-sm">
-                                    Ganti Dokumen
-                                </button>
+                            fetch('{{ route('profile.verifyKtp') }}', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'Accept': 'application/json'
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                this.isUploading = false;
+                                if(data.success) {
+                                    window.location.reload();
+                                } else {
+                                    this.uploadError = data.message || 'Gagal mengupload KTP';
+                                }
+                            })
+                            .catch(err => {
+                                this.isUploading = false;
+                                this.uploadError = 'Terjadi kesalahan jaringan.';
+                            });
+                        }
+                    }">
+                        @if(auth()->user()->ktp_verified_at)
+                            <div class="flex items-center gap-3 bg-[#1c2e24]/40 border border-[#234e34] rounded-xl p-4 text-[#4ade80]">
+                                <div class="flex-shrink-0 bg-[#234e34] rounded-full p-1">
+                                    <svg class="w-4 h-4 text-[#4ade80]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="text-xs">
+                                    <span class="font-bold mr-2">Akun Terverifikasi</span>
+                                    <span class="text-[#86efac]/80 font-medium">KTP diverifikasi {{ \Carbon\Carbon::parse(auth()->user()->ktp_verified_at)->format('d M Y') }} — kamu bisa langsung checkout tanpa hambatan.</span>
+                                </div>
                             </div>
-                        </div>
+                            
+                            <div>
+                                <p class="text-[11px] font-bold text-[#9ca3af] mb-2.5">Dokumen Tersimpan</p>
+                                <div class="border border-dashed border-[#242b38] bg-[#161922] bg-stripes p-8 rounded-xl text-center flex flex-col items-center justify-center min-h-[160px]">
+                                    <svg class="w-5 h-5 text-[#e49322] mb-2" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                    </svg>
+                                    <span class="text-xs text-white font-bold block mb-0.5">{{ basename(auth()->user()->ktp_image_path) }}</span>
+                                    <span class="text-[10px] text-[#556075] font-mono block mb-4">Diunggah {{ \Carbon\Carbon::parse(auth()->user()->ktp_verified_at)->format('d M Y') }} • Terverifikasi</span>
+                                </div>
+                            </div>
+                        @else
+                            <div class="flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-400">
+                                <div class="flex-shrink-0 bg-red-500/20 rounded-full p-1">
+                                    <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                </div>
+                                <div class="text-xs">
+                                    <span class="font-bold mr-2">Belum Diverifikasi</span>
+                                    <span class="text-red-300 font-medium">Unggah KTP kamu untuk memverifikasi akun dan melengkapi data otomatis.</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="text-[11px] font-bold text-[#9ca3af] mb-2.5">Unggah KTP</p>
+                                
+                                <div x-show="uploadError" x-text="uploadError" class="mb-4 text-xs text-red-400 bg-red-500/10 p-3 rounded-lg"></div>
+
+                                <label class="border border-dashed border-[#242b38] hover:border-[#e49322] bg-[#161922] p-8 rounded-xl text-center flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition relative overflow-hidden group">
+                                    <input type="file" class="hidden" accept="image/*" @change="handleUpload">
+                                    
+                                    <div x-show="!isUploading" class="flex flex-col items-center">
+                                        <div class="h-12 w-12 rounded-full bg-[#1a1f29] group-hover:bg-[#e49322]/20 flex items-center justify-center mb-3 transition">
+                                            <svg class="w-6 h-6 text-[#9ca3af] group-hover:text-[#e49322]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                        </div>
+                                        <span class="text-sm text-white font-bold block mb-1">Klik untuk memilih file</span>
+                                        <span class="text-xs text-[#556075]">JPG/PNG maksimal 2MB</span>
+                                    </div>
+                                    
+                                    <div x-show="isUploading" class="flex flex-col items-center">
+                                        <svg class="animate-spin h-8 w-8 text-[#e49322] mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="text-sm text-white font-bold block mb-1 animate-pulse">Memverifikasi Identitas...</span>
+                                        <span class="text-xs text-[#e49322]">Mengekstrak NIK dan Nama otomatis</span>
+                                    </div>
+                                </label>
+                            </div>
+                        @endif
                     </div>
 
                 @elseif($currentTab === 'addresses')
