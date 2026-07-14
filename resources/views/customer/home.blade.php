@@ -25,11 +25,69 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button class="flex items-center gap-2 text-sm font-medium bg-[#1a1d26] border border-gray-700 px-4 py-2 rounded-lg hover:bg-gray-800 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span class="hidden sm:inline">Keranjang</span>
-                <span class="bg-amber-500 text-black text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold ml-1">2</span>
-            </button>
+            <!-- Dropdown Keranjang -->
+            <div class="relative" x-data="{ cartOpen: false }" @click.outside="cartOpen = false">
+                <button @click="cartOpen = !cartOpen" class="flex items-center gap-2 text-sm font-medium bg-[#1a1d26] border border-gray-700 px-4 py-2 rounded-lg hover:bg-gray-800 transition focus:outline-none">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span class="hidden sm:inline">Keranjang</span>
+                    <span class="bg-amber-500 text-black text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-bold ml-1">2</span>
+                </button>
+
+                <div 
+                    x-show="cartOpen"
+                    x-transition:enter="transition ease-out duration-100"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-75"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    class="absolute right-0 mt-2 w-72 bg-[#1a1d26] border border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden"
+                    x-cloak
+                >
+                    <div class="p-4 border-b border-gray-800">
+                        <h4 class="text-sm font-bold text-white">Keranjang Kamu</h4>
+                    </div>
+                    <div class="p-2 max-h-64 overflow-y-auto">
+                        <!-- Item 1 -->
+                        <div class="flex items-center gap-3 p-2 hover:bg-gray-800/50 rounded-lg transition">
+                            <div class="w-12 h-12 bg-[#12141c] rounded border border-gray-700 flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </div>
+                            <div class="flex-grow">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">Kamera</p>
+                                <h5 class="text-xs font-bold text-white leading-tight">Sony A7 III</h5>
+                                <p class="text-[10px] text-gray-500 mt-0.5">3 Hari</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-bold text-white">Rp 1.050.000</p>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div class="flex items-center gap-3 p-2 hover:bg-gray-800/50 rounded-lg transition">
+                            <div class="w-12 h-12 bg-[#12141c] rounded border border-gray-700 flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <div class="flex-grow">
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">Konsol Game</p>
+                                <h5 class="text-xs font-bold text-white leading-tight">PlayStation 5</h5>
+                                <p class="text-[10px] text-gray-500 mt-0.5">2 Hari</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-bold text-white">Rp 300.000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border-t border-gray-800 bg-[#12141c]">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs text-gray-400">Total (2 Item)</span>
+                            <span class="text-sm font-bold text-white">Rp 1.350.000</span>
+                        </div>
+                        <a href="{{ route('checkout') }}" class="block w-full bg-amber-500 hover:bg-amber-600 text-[#12141c] text-center text-sm font-bold py-2.5 rounded-lg transition">
+                            Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
             @auth
                 <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                     <button @click="open = !open" class="flex items-center gap-3 hover:opacity-80 transition focus:outline-none">
