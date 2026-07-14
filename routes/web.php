@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
 
     // SATUKAN SEMUA RUTE KE PROFILE EDIT DENGAN PARAMETER QUERY
     Route::get('/profile/identity-verification', [ProfileController::class, 'edit'])->name('profile.identity');
+    Route::post('/profile/verify-ktp', [ProfileController::class, 'verifyKtp'])->name('profile.verifyKtp');
     Route::get('/addresses', [ProfileController::class, 'edit'])->name('addresses.index');
 
     // GANTI BAGIAN INI: Sekarang mengarah ke ProfileController agar tampilan layout-nya ikut ke-render
