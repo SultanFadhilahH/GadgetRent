@@ -18,6 +18,7 @@ class Rental extends Model
         'end_date',
         'actual_return_date',
         'total_price',
+        'fine_amount',
         'status'
     ];
 

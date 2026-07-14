@@ -43,7 +43,7 @@
                                 ['label' => 'Kategori',             'route' => 'admin.categories.index',  'icon' => 'grid'],
                                 ['label' => 'Gadget',               'route' => 'admin.gadgets.index',     'icon' => 'device'],
                                 ['label' => 'Rental',               'route' => 'admin.rentals.index',     'icon' => 'file'],
-                                ['label' => 'Pengembalian & Denda', 'route' => null,                      'icon' => 'refresh'],
+                                ['label' => 'Pengembalian & Denda', 'route' => 'admin.returns.index',      'icon' => 'refresh'],
                                 ['label' => 'Customer',             'route' => 'admin.customers.index',   'icon' => 'users'],
                             ];
                         @endphp
@@ -57,6 +57,7 @@
                                     || (str_contains((string)$item['route'], 'rentals')    && request()->routeIs('admin.rentals.*'))
                                     || (str_contains((string)$item['route'], 'categories') && request()->routeIs('admin.categories.*'))
                                     || (str_contains((string)$item['route'], 'customers')  && request()->routeIs('admin.customers.*'))
+                                    || (str_contains((string)$item['route'], 'returns')     && request()->routeIs('admin.returns.*'))
                                 );
                                 $href = $item['route'] ? route($item['route']) : '#';
                             @endphp
