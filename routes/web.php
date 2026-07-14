@@ -23,6 +23,7 @@ Route::get('/tentang-kami', function () {
 })->name('about');
 
 Route::get('/katalog', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/katalog/{gadget}', [CatalogController::class, 'show'])->name('catalog.show');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 

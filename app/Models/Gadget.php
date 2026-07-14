@@ -15,7 +15,13 @@ class Gadget extends Model
         'brand',
         'serial_number',
         'price_per_day',
-        'status'
+        'status',
+        'description',
+        'specs',
+    ];
+
+    protected $casts = [
+        'specs' => 'array',
     ];
 
     // Hubungkan relasi ke tabel categories
