@@ -44,13 +44,13 @@
                                 ['label' => 'Gadget', 'route' => 'admin.gadgets.index', 'icon' => 'device'],
                                 ['label' => 'Rental', 'route' => 'admin.rentals.index', 'icon' => 'file'],
                                 ['label' => 'Pengembalian & Denda', 'route' => null, 'icon' => 'refresh'],
-                                ['label' => 'Customer', 'route' => null, 'icon' => 'users'],
+                                ['label' => 'Customer', 'route' => 'admin.customers.index', 'icon' => 'users'],
                             ];
                         @endphp
 
                         @foreach ($menu as $item)
                             @php
-                                $isActive = $item['route'] && (request()->routeIs($item['route']) || (str_contains($item['route'], 'gadgets') && request()->routeIs('admin.gadgets.*')) || (str_contains($item['route'], 'rentals') && request()->routeIs('admin.rentals.*')) || (str_contains($item['route'], 'categories') && request()->routeIs('admin.categories.*')));
+                                $isActive = $item['route'] && (request()->routeIs($item['route']) || (str_contains($item['route'], 'gadgets') && request()->routeIs('admin.gadgets.*')) || (str_contains($item['route'], 'rentals') && request()->routeIs('admin.rentals.*')) || (str_contains($item['route'], 'categories') && request()->routeIs('admin.categories.*')) || (str_contains($item['route'], 'customers') && request()->routeIs('admin.customers.*')));
                                 $href = $item['route'] ? route($item['route']) : '#';
                             @endphp
                             <li>

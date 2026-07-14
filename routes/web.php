@@ -7,6 +7,7 @@ use App\Http\Controllers\GadgetController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
 
 Route::get('/', function () {
     $gadgets = \App\Models\Gadget::with('category')->take(5)->get();
@@ -48,6 +49,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
     Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
     Route::resource('categories', CategoryController::class)->except(['create', 'edit', 'show']);
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
