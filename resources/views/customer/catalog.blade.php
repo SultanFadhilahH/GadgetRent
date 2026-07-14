@@ -20,6 +20,7 @@
         <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
             <a href="{{ url('/') }}" class="hover:text-white transition">Home</a>
             <a href="{{ route('catalog.index') }}" class="text-white border-b-2 border-amber-500 pb-1">Katalog</a>
+            <a href="{{ route('blog.index') }}" class="hover:text-white transition">Blog</a>
             <a href="{{ route('about') }}" class="hover:text-white transition">Tentang Kami</a>
         </div>
 

@@ -177,6 +177,7 @@ class DatabaseSeeder extends Seeder
         // ========================================
         $this->call([
             RentalSeeder::class,
+            BlogSeeder::class,
         ]);
     }
 }
