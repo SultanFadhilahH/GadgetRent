@@ -129,7 +129,9 @@
                             <span class="w-1.5 h-1.5 rounded-full {{ $dotClass }}"></span> {{ $statusLabel }}
                         </span>
 
-                        @if (strtolower($gadget->category->name ?? '') == 'kamera')
+                        @if ($gadget->image)
+                            <img src="{{ asset('images/gadgets/'.$gadget->image) }}" alt="{{ $gadget->name }}" class="w-full h-full object-cover">
+                        @elseif (strtolower($gadget->category->name ?? '') == 'kamera')
                             <svg class="w-14 h-14 text-gray-600 group-hover:text-gray-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         @elseif (strtolower($gadget->category->name ?? '') == 'laptop')
                             <svg class="w-14 h-14 text-gray-600 group-hover:text-gray-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
