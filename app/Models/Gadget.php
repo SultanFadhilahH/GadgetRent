@@ -16,6 +16,7 @@ class Gadget extends Model
         'serial_number',
         'price_per_day',
         'status',
+        'image',
         'description',
         'specs',
     ];

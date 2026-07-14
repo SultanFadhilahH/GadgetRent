@@ -104,11 +104,15 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <!-- Galeri -->
             <div>
-                <div class="relative bg-[#1a1d26] border border-gray-800 rounded-xl aspect-square flex items-center justify-center mb-4">
-                    <span class="absolute top-4 left-4 {{ $badgeClasses }} text-[10px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 uppercase tracking-wider">
+                <div class="relative bg-[#1a1d26] border border-gray-800 rounded-xl aspect-square flex items-center justify-center mb-4 overflow-hidden">
+                    <span class="absolute top-4 left-4 {{ $badgeClasses }} text-[10px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 uppercase tracking-wider z-10">
                         <span class="w-1.5 h-1.5 rounded-full {{ $dotClass }}"></span> {{ $statusLabel }}
                     </span>
-                    <svg class="w-28 h-28 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="{{ $iconPath }}"></path></svg>
+                    @if ($gadget->image)
+                        <img src="{{ asset('images/gadgets/'.$gadget->image) }}" alt="{{ $gadget->name }}" class="w-full h-full object-cover">
+                    @else
+                        <svg class="w-28 h-28 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="{{ $iconPath }}"></path></svg>
+                    @endif
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     @for ($i = 0; $i < 3; $i++)
