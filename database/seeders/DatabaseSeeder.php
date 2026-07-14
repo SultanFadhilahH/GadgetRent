@@ -109,6 +109,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'available',
             'description' => 'Kamera mirrorless full-frame andalan untuk foto dan video dengan performa low-light yang kuat serta autofokus cepat, cocok untuk konten kreator dan fotografer event.',
             'specs' => ['Sensor full-frame 24.2MP', '4K 30fps', '5-axis stabilization', 'Body only'],
+            'image' => 'gadget_6a566ada0e8c8.png',
         ]);
 
         Gadget::create([
@@ -120,6 +121,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'available',
             'description' => 'Kamera mirrorless serbaguna dengan autofokus cepat dan performa burst tinggi, cocok untuk foto aksi maupun video profesional.',
             'specs' => ['Sensor full-frame 24.2MP', '4K 60fps', 'In-body stabilization', 'Body only'],
+            'image' => 'gadget_6a566ae5382fd.png',
         ]);
 
         Gadget::create([
@@ -131,6 +133,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'available',
             'description' => 'Laptop tipis dan ringan dengan chip Apple M2, cocok untuk kerja, desain, dan editing ringan tanpa perlu daya baterai besar.',
             'specs' => ['Chip Apple M2', '8GB RAM', '256GB SSD', 'Layar 13.6" Liquid Retina'],
+            'image' => 'gadget_6a566aef43faa.png',
         ]);
 
         Gadget::create([
@@ -142,6 +145,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'available',
             'description' => 'Konsol gaming generasi terbaru dengan loading super cepat dan grafis 4K, lengkap dengan satu unit controller DualSense.',
             'specs' => ['4K 120fps', 'SSD ultra-cepat', '1x DualSense controller', 'Ray tracing'],
+            'image' => 'gadget_6a566af9bfe7c.png',
         ]);
 
         Gadget::create([
@@ -153,6 +157,7 @@ class DatabaseSeeder extends Seeder
             'status' => 'available',
             'description' => 'Konsol hybrid dengan layar OLED cerah, bisa dimainkan di TV atau mode genggam, cocok buat gaming bareng teman atau keluarga.',
             'specs' => ['Layar OLED 7"', 'Mode TV & handheld', '2x Joy-Con', '64GB storage'],
+            'image' => 'gadget_6a566b025fc4e.png',
         ]);
 
         // ========================================
