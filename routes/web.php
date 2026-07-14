@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GadgetController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\Admin\LaporanController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', function () {
     $gadgets = \App\Models\Gadget::with('category')->take(5)->get();
@@ -46,6 +47,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::post('/laporan/export-semua', [LaporanController::class, 'exportSemua'])->name('laporan.export-semua');
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
     Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
+    Route::resource('categories', CategoryController::class)->except(['create', 'edit', 'show']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
