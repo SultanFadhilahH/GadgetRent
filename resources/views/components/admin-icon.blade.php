@@ -22,5 +22,10 @@
     $d = $paths[$name] ?? $paths['grid'];
 @endphp
 <svg {{ $attributes->merge(['class' => 'h-5 w-5']) }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $d }}" />
+    @if($name === 'tag')
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.6 12.3L12.3 20.6a1.5 1.5 0 01-2.1 0l-7.8-7.8a1.5 1.5 0 010-2.1L10.7 2.4a1.5 1.5 0 011-.4H19a1.5 1.5 0 011.5 1.5v7.3a1.5 1.5 0 01-.4 1z" />
+        <circle cx="15.5" cy="7.5" r="1.2" />
+    @else
+        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $d }}" />
+    @endif
 </svg>
