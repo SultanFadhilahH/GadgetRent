@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
         Gadget::create([
             'category_id' => $kamera->id,
             'name' => 'Sony A7 III',
-            'image' => $this->seedGadgetImage('Sony A7 III'),
+            'image' => 'gadget_6a566ada0e8c8.png',
             'brand' => 'Sony',
             'serial_number' => 'SNY-A7III-20260001',
             'price_per_day' => 350000,
@@ -115,7 +115,7 @@ class DatabaseSeeder extends Seeder
         Gadget::create([
             'category_id' => $kamera->id,
             'name' => 'Canon EOS R6 Mark II',
-            'image' => $this->seedGadgetImage('Canon EOS R6 Mark II'),
+            'image' => 'gadget_6a566ae5382fd.png',
             'brand' => 'Canon',
             'serial_number' => 'CAN-R6MK2-20260002',
             'price_per_day' => 400000,
@@ -127,7 +127,7 @@ class DatabaseSeeder extends Seeder
         Gadget::create([
             'category_id' => $laptop->id,
             'name' => 'MacBook Air M2',
-            'image' => $this->seedGadgetImage('MacBook Air M2'),
+            'image' => 'gadget_6a566aef43faa.png',
             'brand' => 'Apple',
             'serial_number' => 'APL-MBA-M2-20260003',
             'price_per_day' => 250000,
@@ -139,7 +139,7 @@ class DatabaseSeeder extends Seeder
         Gadget::create([
             'category_id' => $konsol->id,
             'name' => 'PlayStation 5',
-            'image' => $this->seedGadgetImage('PlayStation 5'),
+            'image' => 'gadget_6a566af9bfe7c.png',
             'brand' => 'Sony',
             'serial_number' => 'SNY-PS5-20260004',
             'price_per_day' => 150000,
@@ -151,7 +151,7 @@ class DatabaseSeeder extends Seeder
         Gadget::create([
             'category_id' => $konsol->id,
             'name' => 'Nintendo Switch OLED',
-            'image' => $this->seedGadgetImage('Nintendo Switch'),
+            'image' => 'gadget_6a566b025fc4e.png',
             'brand' => 'Nintendo',
             'serial_number' => 'NTD-SWOLED-20260005',
             'price_per_day' => 100000,
@@ -185,40 +185,5 @@ class DatabaseSeeder extends Seeder
             BlogSeeder::class,
             VoucherSeeder::class,
         ]);
-    }
-
-    private function seedGadgetImage($gadgetName)
-    {
-        $text = urlencode($gadgetName);
-        $url = "https://placehold.co/600x400/1a1d26/F59E0B.png?text={$text}";
-        
-        $filename = 'gadget_' . uniqid() . '.png';
-        $path = public_path('images/gadgets');
-        
-        if (!file_exists($path)) {
-            mkdir($path, 0755, true);
-        }
-        
-        $context = stream_context_create([
-            "ssl" => [
-                "verify_peer" => false,
-                "verify_peer_name" => false,
-            ],
-            "http" => [
-                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)\r\n"
-            ]
-        ]);
-        
-        try {
-            $imageContent = file_get_contents($url, false, $context);
-            if ($imageContent) {
-                file_put_contents($path . '/' . $filename, $imageContent);
-                return $filename;
-            }
-        } catch (\Exception $e) {
-            // Jika gagal download, return null
-        }
-        
-        return null;
     }
 }
