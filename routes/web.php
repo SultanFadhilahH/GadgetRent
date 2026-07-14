@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Customer\CatalogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
     Route::resource('categories', CategoryController::class)->except(['create', 'edit', 'show']);
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/pengembalian', [ReturnController::class, 'index'])->name('returns.index');
+    Route::put('/pengembalian/{rental}', [ReturnController::class, 'process'])->name('returns.process');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
