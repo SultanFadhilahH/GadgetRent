@@ -19,7 +19,7 @@
 
         <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
             <a href="#" class="text-white border-b-2 border-amber-500 pb-1">Home</a>
-            <a href="#" class="hover:text-white transition">Katalog</a>
+            <a href="{{ route('catalog.index') }}" class="hover:text-white transition">Katalog</a>
             <a href="#" class="hover:text-white transition">Blog</a>
             <a href="#" class="hover:text-white transition">Tentang Kami</a>
         </div>
@@ -116,9 +116,9 @@
             </div>
 
             <div class="flex flex-wrap gap-4">
-                <button class="bg-amber-500 hover:bg-amber-600 text-[#12141c] font-bold px-6 py-3 rounded-lg transition text-sm">
+                <a href="{{ route('catalog.index') }}" class="bg-amber-500 hover:bg-amber-600 text-[#12141c] font-bold px-6 py-3 rounded-lg transition text-sm inline-block text-center">
                     Lihat Katalog
-                </button>
+                </a>
                 <button class="bg-[#1a1d26] border border-gray-700 hover:bg-gray-800 text-white font-bold px-6 py-3 rounded-lg transition text-sm">
                     Tentang Kami
                 </button>
@@ -303,7 +303,7 @@
                 <h3 class="text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-4">Navigasi</h3>
                 <ul class="space-y-3 text-xs text-gray-400">
                     <li><a href="#" class="hover:text-amber-500 transition">Home</a></li>
-                    <li><a href="#" class="hover:text-amber-500 transition">Katalog</a></li>
+                    <li><a href="{{ route('catalog.index') }}" class="hover:text-amber-500 transition">Katalog</a></li>
                     <li><a href="#" class="hover:text-amber-500 transition">Blog</a></li>
                     <li><a href="#" class="hover:text-amber-500 transition">Tentang Kami</a></li>
                 </ul>

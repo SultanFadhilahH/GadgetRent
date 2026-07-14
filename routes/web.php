@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Customer\CatalogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GadgetController;
@@ -19,6 +20,8 @@ Route::get('/', function () {
 Route::get('/tentang-kami', function () {
     return view('customer.about');
 })->name('about');
+
+Route::get('/katalog', [CatalogController::class, 'index'])->name('catalog.index');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
