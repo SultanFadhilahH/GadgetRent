@@ -20,8 +20,8 @@
         <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
             <a href="#" class="text-white border-b-2 border-amber-500 pb-1">Home</a>
             <a href="{{ route('catalog.index') }}" class="hover:text-white transition">Katalog</a>
-            <a href="#" class="hover:text-white transition">Blog</a>
-            <a href="#" class="hover:text-white transition">Tentang Kami</a>
+            <a href="{{ route('blog.index') }}" class="hover:text-white transition">Blog</a>
+            <a href="{{ route('about') }}" class="hover:text-white transition">Tentang Kami</a>
         </div>
 
         <div class="flex items-center gap-4">
@@ -306,8 +306,8 @@
                 <ul class="space-y-3 text-xs text-gray-400">
                     <li><a href="#" class="hover:text-amber-500 transition">Home</a></li>
                     <li><a href="{{ route('catalog.index') }}" class="hover:text-amber-500 transition">Katalog</a></li>
-                    <li><a href="#" class="hover:text-amber-500 transition">Blog</a></li>
-                    <li><a href="#" class="hover:text-amber-500 transition">Tentang Kami</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="hover:text-amber-500 transition">Blog</a></li>
+                    <li><a href="{{ route('about') }}" class="hover:text-amber-500 transition">Tentang Kami</a></li>
                 </ul>
             </div>
 
