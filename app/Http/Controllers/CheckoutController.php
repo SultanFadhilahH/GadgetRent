@@ -19,9 +19,10 @@ class CheckoutController extends Controller
             return false;
         }
 
+        // Cek nama lengkap, nik, dan no hp di tabel users (atau tabel customer tergantung implementasi, tapi disyaratkan user punya NIK)
         // Check if user is a customer and has address
-        $customer = Customer::where('user_id', $user->id)->first();
-        if (!$customer || !$customer->address) {
+        $customer = Customer::where('nik', $user->nik)->first();
+        if (!$customer || empty($customer->address) || $customer->address === 'Silakan update alamat di profil') {
             return false;
         }
 
@@ -58,7 +59,14 @@ class CheckoutController extends Controller
             ->where('valid_until', '>=', now())
             ->get();
 
-        $customer = Customer::where('user_id', $user->id)->first();
+        $customer = Customer::firstOrCreate(
+            ['nik' => $user->nik],
+            [
+                'name' => $user->name,
+                'phone_number' => $user->phone ?? '0',
+                'address' => 'Silakan update alamat di profil'
+            ]
+        );
 
         return view('customer.checkout', compact('items', 'vouchers', 'customer'));
     }
@@ -88,7 +96,14 @@ class CheckoutController extends Controller
             return back()->with('error', 'COD hanya tersedia untuk opsi Ambil di Toko.');
         }
 
-        $customer = Customer::firstOrCreate(['user_id' => $user->id]);
+        $customer = Customer::firstOrCreate(
+            ['nik' => $user->nik],
+            [
+                'name' => $user->name,
+                'phone_number' => $user->phone ?? '0',
+                'address' => 'Silakan update alamat di profil'
+            ]
+        );
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
         $duration = $startDate->diffInDays($endDate);
