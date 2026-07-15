@@ -145,6 +145,19 @@
                     </div>
                 @endif
 
+                @if (session('error'))
+                    <div
+                        x-data="{ show: true }"
+                        x-show="show"
+                        x-init="setTimeout(() => show = false, 4000)"
+                        x-transition
+                        class="mb-6 flex items-start justify-between gap-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+                    >
+                        <span>{{ session('error') }}</span>
+                        <button @click="show = false" class="text-red-400 hover:text-red-200">&times;</button>
+                    </div>
+                @endif
+
                 @yield('content')
             </main>
         </div>

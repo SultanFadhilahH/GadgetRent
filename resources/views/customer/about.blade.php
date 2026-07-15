@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tentang Kami - GadgetRent</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body { font-family: 'Inter', sans-serif; }
         .font-display { font-family: 'Space Grotesk', sans-serif; }
@@ -14,33 +14,7 @@
 <body class="bg-[#12141c] text-gray-300 min-h-screen flex flex-col justify-between antialiased">
 
     <div>
-        <nav class="bg-[#12141c] border-b border-gray-800/60 sticky top-0 z-50">
-            <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-
-                <div class="flex items-center gap-2">
-                    <span class="text-amber-500 text-sm">◆</span>
-                    <span class="font-bold tracking-wider text-white text-sm font-display">GADGETRENT</span>
-                </div>
-
-                <div class="flex items-center space-x-6 text-xs font-medium">
-                    <a href="#" class="text-gray-400 hover:text-white transition">Home</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">Katalog</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition">Blog</a>
-                    <a href="{{ route('customer.about') }}" class="text-white relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-amber-500 font-semibold">
-                        Tentang Kami
-                    </a>
-                </div>
-
-                <div class="flex items-center gap-3">
-                    @include('components.navbar-cart')
-
-                    <div class="w-7 h-7 bg-amber-500 text-[#12141c] font-bold text-xs flex items-center justify-center rounded-lg shadow-sm">
-                        {{ substr(Auth::user()->name ?? 'BS', 0, 2) }}
-                    </div>
-                </div>
-
-            </div>
-        </nav>
+        <x-customer-navbar active="about" />
 
         <main class="max-w-5xl mx-auto space-y-12 py-12 px-4">
 
@@ -229,10 +203,10 @@
                 <div class="space-y-3">
                     <h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest font-display">Navigasi</h4>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Katalog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
-                        <li><a href="{{ route('customer.about') }}" class="text-gray-400 hover:text-white transition">Tentang Kami</a></li>
+                        <li><a href="{{ url('/') }}" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="{{ route('catalog.index') }}" class="text-gray-400 hover:text-white transition">Katalog</a></li>
+                        <li><a href="{{ route('blog.index') }}" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="{{ route('about') }}" class="text-gray-400 hover:text-white transition">Tentang Kami</a></li>
                     </ul>
                 </div>
 

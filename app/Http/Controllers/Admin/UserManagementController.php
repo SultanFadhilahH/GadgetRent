@@ -129,4 +129,20 @@ class UserManagementController extends Controller
 
         return back()->with('success', "Peran untuk \"{$user->name}\" berhasil diperbarui.");
     }
+
+    /**
+     * Hapus seorang pengguna.
+     */
+    public function destroyUser(Request $request, User $user): RedirectResponse
+    {
+        if ($user->id === $request->user()->id) {
+            return back()->with('error', 'Kamu tidak bisa menghapus akunmu sendiri.');
+        }
+
+        $name = $user->name;
+        $user->roles()->detach();
+        $user->delete();
+
+        return back()->with('success', "Pengguna \"{$name}\" berhasil dihapus.");
+    }
 }

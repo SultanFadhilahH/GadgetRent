@@ -66,6 +66,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::put('/manajemen-user/roles/{role}', [UserManagementController::class, 'updateRolePermissions'])->name('users.roles.update');
     Route::post('/manajemen-user/users', [UserManagementController::class, 'storeUser'])->name('users.users.store');
     Route::put('/manajemen-user/users/{user}/role', [UserManagementController::class, 'updateUserRole'])->name('users.users.updateRole');
+    Route::delete('/manajemen-user/users/{user}', [UserManagementController::class, 'destroyUser'])->name('users.users.destroy');
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
     Route::post('/laporan/export-bulanan', [LaporanController::class, 'exportBulanan'])->name('laporan.export-bulanan');
     Route::post('/laporan/export-semua', [LaporanController::class, 'exportSemua'])->name('laporan.export-semua');
@@ -81,9 +82,5 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
 });
-
-Route::get('/about', function () {
-    return view('customer.about');
-})->name('customer.about');
 
 require __DIR__.'/auth.php';

@@ -11,28 +11,7 @@
 <body class="font-sans antialiased bg-[#0c0d12] text-[#9ca3af] flex flex-col min-h-screen">
 
     <!-- Navbar -->
-    <nav class="border-b border-[#1a1f29] bg-[#0c0d12] py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <a href="/" class="flex items-center gap-2">
-                <span class="flex h-3.5 w-3.5 rotate-45 items-center justify-center rounded-sm bg-[#e49322]"></span>
-                <span class="text-sm font-black tracking-wider text-white uppercase font-sans">GADGETRENT</span>
-            </a>
-        </div>
-
-        <div class="hidden md:flex gap-6 text-xs font-semibold text-[#9ca3af]">
-            <a href="/" class="hover:text-white transition">Home</a>
-            <a href="#" class="hover:text-white transition">Katalog</a>
-            <a href="#" class="hover:text-white transition">Blog</a>
-            <a href="#" class="hover:text-white transition">Tentang Kami</a>
-        </div>
-
-        <div class="flex items-center gap-4">
-            @include('components.navbar-cart')
-            <div class="h-8 w-8 bg-[#e49322] rounded-md flex items-center justify-center text-black font-extrabold text-xs uppercase shadow-md shadow-[#e49322]/10">
-                {{ substr(auth()->user()->name, 0, 2) }}
-            </div>
-        </div>
-    </nav>
+    <x-customer-navbar />
 
     <!-- Main Content -->
     <main class="flex-grow py-12 px-6 md:px-12 max-w-7xl w-full mx-auto">
@@ -628,9 +607,9 @@
                 <h3 class="text-[9px] font-bold text-[#475166] uppercase tracking-wider mb-3">Navigasi</h3>
                 <ul class="space-y-2 text-[11px]">
                     <li><a href="/" class="hover:text-[#e49322] transition">Home</a></li>
-                    <li><a href="#" class="hover:text-[#e49322] transition">Katalog</a></li>
-                    <li><a href="#" class="hover:text-[#e49322] transition">Blog</a></li>
-                    <li><a href="#" class="hover:text-[#e49322] transition">Tentang Kami</a></li>
+                    <li><a href="{{ route('catalog.index') }}" class="hover:text-[#e49322] transition">Katalog</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="hover:text-[#e49322] transition">Blog</a></li>
+                    <li><a href="{{ route('about') }}" class="hover:text-[#e49322] transition">Tentang Kami</a></li>
                 </ul>
             </div>
             <div>

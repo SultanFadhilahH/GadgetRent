@@ -11,16 +11,7 @@
 <body class="font-sans antialiased bg-[#0b0c10] text-gray-200 flex flex-col min-h-screen">
     
     <!-- Navbar -->
-    <nav class="border-b border-gray-900 bg-[#0b0c10] py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <span class="flex h-4 w-4 rotate-45 items-center justify-center rounded-sm bg-amber-500"></span>
-            <span class="text-sm font-bold tracking-wide text-white uppercase">GADGETRENT</span>
-        </div>
-        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-            <a href="/" class="hover:text-white transition">Home</a>
-            <a href="{{ route('catalog.index') }}" class="hover:text-white transition">Katalog</a>
-        </div>
-    </nav>
+    <x-customer-navbar />
 
     <!-- Main Content -->
     <main class="flex-grow flex items-center justify-center py-10 px-6">
