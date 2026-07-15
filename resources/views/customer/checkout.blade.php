@@ -217,8 +217,8 @@
                             <select x-model="selectedVoucherId" @change="calculateDiscount()" class="w-full bg-[#12141c] border border-gray-800 rounded-lg text-sm text-white focus:ring-amber-500 focus:border-amber-500 p-3">
                                 <option value="">Tidak pakai voucher</option>
                                 @foreach($vouchers as $v)
-                                    <option value="{{ $v->id }}" data-type="{{ $v->discount_type }}" data-amount="{{ $v->discount_amount }}">
-                                        {{ $v->code }} - {{ $v->discount_type == 'percentage' ? $v->discount_amount.'%' : 'Rp '.number_format($v->discount_amount,0,',','.') }} (Min: Rp {{ number_format($v->min_transaction,0,',','.') }})
+                                    <option value="{{ $v->id }}" data-type="{{ $v->discount_type }}" data-amount="{{ $v->discount_value }}">
+                                        {{ $v->code }} - {{ $v->discount_type == 'percent' ? $v->discount_value.'%' : 'Rp '.number_format($v->discount_value,0,',','.') }}
                                     </option>
                                 @endforeach
                             </select>
@@ -308,7 +308,7 @@
                             const type = option.getAttribute('data-type');
                             const amount = parseFloat(option.getAttribute('data-amount'));
                             
-                            if(type === 'percentage') {
+                            if(type === 'percent') {
                                 this.discount = (this.subtotalPrice * amount) / 100;
                             } else {
                                 this.discount = amount;

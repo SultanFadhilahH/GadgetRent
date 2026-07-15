@@ -52,8 +52,10 @@ class CheckoutController extends Controller
             $items = $carts;
         }
 
-        $vouchers = Voucher::where('status', 'active')
-            ->where('valid_until', '>=', now())
+        $vouchers = Voucher::where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('end_date')->orWhere('end_date', '>=', now()->toDateString());
+            })
             ->get();
 
         return view('customer.checkout', compact('items', 'vouchers', 'user'));
@@ -103,7 +105,9 @@ class CheckoutController extends Controller
         $voucher        = null;
         $discountAmount = 0;
         if ($request->voucher_id) {
-            $voucher = Voucher::find($request->voucher_id);
+            $voucher = Voucher::where('id', $request->voucher_id)
+                ->where('is_active', true)
+                ->first();
         }
 
         $invoiceCode = 'INV-' . strtoupper(Str::random(10));
@@ -114,9 +118,9 @@ class CheckoutController extends Controller
         }
 
         if ($voucher) {
-            $discountAmount = $voucher->discount_type === 'percentage'
-                ? ($totalPrice * $voucher->discount_amount) / 100
-                : $voucher->discount_amount;
+            $discountAmount = $voucher->discount_type === 'percent'
+                ? ($totalPrice * $voucher->discount_value) / 100
+                : $voucher->discount_value;
         }
 
         $finalAmount    = max(0, $totalPrice - $discountAmount);
