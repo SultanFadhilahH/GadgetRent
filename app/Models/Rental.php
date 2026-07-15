@@ -19,8 +19,20 @@ class Rental extends Model
         'actual_return_date',
         'total_price',
         'fine_amount',
-        'status'
+        'status',
+        'total_amount',
+        'payment_method',
+        'payment_status',
+        'delivery_option',
+        'shipping_address',
+        'voucher_id',
     ];
+
+    // Relasi ke User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Relasi ke Customer
     public function customer()
@@ -32,5 +44,11 @@ class Rental extends Model
     public function gadget()
     {
         return $this->belongsTo(Gadget::class);
+    }
+
+    // Relasi ke Voucher
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
     }
 }

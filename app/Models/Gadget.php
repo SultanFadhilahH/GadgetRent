@@ -25,9 +25,18 @@ class Gadget extends Model
         'specs' => 'array',
     ];
 
-    // Hubungkan relasi ke tabel categories
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class);
     }
 }

@@ -21,9 +21,7 @@ Route::get('/tentang-kami', function () {
     return view('customer.about');
 })->name('about');
 
-Route::get('/checkout', function () {
-    return view('customer.checkout');
-})->name('checkout');
+
 
 Route::get('/katalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/katalog/{gadget}', [CatalogController::class, 'show'])->name('catalog.show');
@@ -44,6 +42,19 @@ Route::middleware('auth')->group(function () {
     // GANTI BAGIAN INI: Sekarang mengarah ke ProfileController agar tampilan layout-nya ikut ke-render
     Route::get('/password/edit', [ProfileController::class, 'edit'])->name('password.edit');
     Route::get('/orders', [ProfileController::class, 'edit'])->name('orders.index');
+    
+    // Cart Routes
+    Route::post('/cart', [\App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/{cart}', [\App\Http\Controllers\CartController::class, 'destroy'])->name('cart.destroy');
+    
+    // Checkout Routes
+    Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/checkout/direct/{gadget}', [\App\Http\Controllers\CheckoutController::class, 'direct'])->name('checkout.direct');
+    Route::post('/checkout/confirm-payment', [\App\Http\Controllers\CheckoutController::class, 'confirmPayment'])->name('checkout.confirmPayment');
+    
+    // API for navbar cart
+    Route::get('/api/cart', [\App\Http\Controllers\CartController::class, 'getCartData'])->name('api.cart');
 });
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('admin.')->group(function () {
