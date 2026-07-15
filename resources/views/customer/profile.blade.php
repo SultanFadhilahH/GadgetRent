@@ -279,47 +279,103 @@
                 @elseif($currentTab === 'addresses')
                     <!-- ================= KONTEN 3: ALAMAT SAYA ================= -->
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-sm font-bold text-white tracking-wide">Alamat Saya</h2>
-                        <button class="bg-[#e49322] hover:bg-[#c97e1b] text-black font-extrabold text-xs px-3.5 py-1.5 rounded-lg transition shadow-md shadow-[#e49322]/5">
-                            + Tambah Alamat Baru
-                        </button>
+                        <div>
+                            <h2 class="text-sm font-bold text-white tracking-wide">Alamat Pengiriman</h2>
+                            <p class="text-[10px] text-[#556075] mt-0.5">Alamat ini digunakan untuk pengiriman dan keperluan checkout.</p>
+                        </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="bg-[#13161e] border border-[#e49322]/40 rounded-xl p-5 relative shadow-sm">
-                            <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h4 class="text-xs font-black text-white">Budi Santoso</h4>
-                                    <span class="text-[11px] font-medium text-[#475166] font-mono">081234567890</span>
+                    @if(session('status') === 'address-saved')
+                        <div class="bg-green-500/10 border border-green-500/30 text-green-400 text-xs p-4 rounded-xl mb-6 flex items-center gap-2">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            Alamat berhasil disimpan!
+                        </div>
+                    @endif
+
+                    @if(auth()->user()->hasAddress())
+                        <!-- Tampilkan Alamat Yang Sudah Ada -->
+                        <div class="bg-[#13161e] border border-[#e49322]/40 rounded-xl p-5 relative shadow-sm mb-6">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-center gap-2 mb-3">
                                     <span class="bg-[#e49322]/10 text-[#e49322] text-[9px] font-black font-mono px-1.5 py-0.5 rounded tracking-wide uppercase">Utama</span>
-                                </div>
-                                <div class="flex items-center gap-3 text-[11px] font-bold">
-                                    <button class="text-[#9ca3af] hover:text-white transition">Ubah</button>
-                                    <button class="text-[#ef4444] hover:text-[#f87171] transition">Hapus</button>
+                                    <h4 class="text-xs font-black text-white">{{ auth()->user()->name }}</h4>
+                                    <span class="text-[11px] font-medium text-[#475166] font-mono">{{ auth()->user()->phone }}</span>
                                 </div>
                             </div>
                             <p class="text-[11px] text-[#9ca3af] leading-relaxed max-w-3xl">
-                                Jl. Merdeka No. 10, RT 04/RW 02, Kel. Cihapit, Kec. Bandung Wetan, Kota Bandung, Jawa Barat 40114
+                                {{ auth()->user()->full_address }}
                             </p>
                         </div>
+                    @else
+                        <div class="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs p-4 rounded-xl mb-6 flex items-center gap-2">
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                            Anda belum mengisi alamat. Alamat wajib diisi sebelum bisa melakukan checkout.
+                        </div>
+                    @endif
 
-                        <div class="bg-[#13161e] border border-[#1a1f29] rounded-xl p-5 relative">
-                            <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center gap-2 flex-wrap">
-                                    <h4 class="text-xs font-black text-[#f3f4f6]">Budi Santoso (Kantor)</h4>
-                                    <span class="text-[11px] font-medium text-[#475166] font-mono">081234567890</span>
+                    <!-- Form Tambah/Ubah Alamat -->
+                    <div class="bg-[#13161e] border border-[#1a1f29] rounded-xl p-6">
+                        <h3 class="text-xs font-bold text-white mb-5">{{ auth()->user()->hasAddress() ? 'Ubah Alamat' : 'Tambah Alamat' }}</h3>
+                        
+                        <form method="POST" action="{{ route('addresses.save') }}" class="space-y-4">
+                            @csrf
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Provinsi <span class="text-red-400">*</span></label>
+                                    <input type="text" name="province" value="{{ old('province', auth()->user()->province) }}" 
+                                        placeholder="Contoh: Jawa Barat" 
+                                        class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2.5 text-xs text-white focus:border-[#e49322] focus:outline-none transition @error('province') border-red-500 @enderror">
+                                    @error('province')<p class="text-red-400 text-[10px] mt-1">{{ $message }}</p>@enderror
                                 </div>
-                                <div class="flex items-center gap-3 text-[11px] font-bold">
-                                    <button class="text-[#9ca3af] hover:text-white transition">Jadikan Utama</button>
-                                    <button class="text-[#9ca3af] hover:text-white transition">Ubah</button>
-                                    <button class="text-[#ef4444] hover:text-[#f87171] transition">Hapus</button>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Kota / Kabupaten <span class="text-red-400">*</span></label>
+                                    <input type="text" name="city" value="{{ old('city', auth()->user()->city) }}" 
+                                        placeholder="Contoh: Kota Bandung" 
+                                        class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2.5 text-xs text-white focus:border-[#e49322] focus:outline-none transition @error('city') border-red-500 @enderror">
+                                    @error('city')<p class="text-red-400 text-[10px] mt-1">{{ $message }}</p>@enderror
                                 </div>
                             </div>
-                            <p class="text-[11px] text-[#556075] leading-relaxed max-w-3xl">
-                                Jl. Ir. H. Djuanda No. 45, Lantai 3, Kel. Dago, Kec. Coblong, Kota Bandung, Jawa Barat 40135
-                            </p>
-                        </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Kecamatan / Kelurahan</label>
+                                    <input type="text" name="district" value="{{ old('district', auth()->user()->district) }}" 
+                                        placeholder="Contoh: Bandung Wetan" 
+                                        class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2.5 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
+                                </div>
+
+                                <div>
+                                    <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Kode Pos</label>
+                                    <input type="text" name="postal_code" value="{{ old('postal_code', auth()->user()->postal_code) }}" 
+                                        placeholder="Contoh: 40114" maxlength="10"
+                                        class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2.5 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-[11px] font-bold text-[#9ca3af] mb-1.5">Alamat Lengkap <span class="text-red-400">*</span></label>
+                                <textarea name="address_detail" rows="3" 
+                                    placeholder="Contoh: Jl. Merdeka No. 10, RT 04/RW 02, Kel. Cihapit" 
+                                    class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg px-3.5 py-2.5 text-xs text-white focus:border-[#e49322] focus:outline-none transition resize-none @error('address_detail') border-red-500 @enderror">{{ old('address_detail', auth()->user()->address_detail) }}</textarea>
+                                <p class="text-[10px] text-[#556075] mt-1">Tulis nama jalan, nomor rumah, RT/RW, nama gedung (jika ada)</p>
+                                @error('address_detail')<p class="text-red-400 text-[10px] mt-1">{{ $message }}</p>@enderror
+                            </div>
+
+                            <div class="pt-2 flex items-center gap-3">
+                                <button type="submit" class="bg-[#e49322] hover:bg-[#c97e1b] text-black font-extrabold text-xs px-5 py-2.5 rounded-lg transition shadow-md shadow-[#e49322]/5">
+                                    Simpan Alamat
+                                </button>
+                                @if(auth()->user()->hasAddress())
+                                    <a href="{{ route('checkout.index') }}" class="text-[#9ca3af] hover:text-white text-xs font-bold transition">
+                                        Lanjut ke Checkout →
+                                    </a>
+                                @endif
+                            </div>
+                        </form>
                     </div>
+
 
                 @elseif($currentTab === 'password')
                     <!-- ================= KONTEN 4: UBAH KATA SANDI (PERSIS MOCKUP) ================= -->

@@ -75,11 +75,11 @@
                         
                         <div>
                             <div class="flex items-center gap-3 mb-2">
-                                <h3 class="text-sm font-bold text-white">{{ auth()->user()->name }}</h3>
-                                <span class="text-xs text-gray-400">{{ auth()->user()->phone }}</span>
+                                <h3 class="text-sm font-bold text-white">{{ $user->name }}</h3>
+                                <span class="text-xs text-gray-400">{{ $user->phone }}</span>
                             </div>
                             <p class="text-sm text-gray-400 leading-relaxed max-w-lg">
-                                {{ $customer->address }}
+                                {{ $user->full_address }}
                             </p>
                         </div>
                     </div>
