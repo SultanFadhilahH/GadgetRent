@@ -7,8 +7,12 @@
     x-data="{
         addUserOpen: {{ old('_form') === 'add_user' && $errors->any() ? 'true' : 'false' }},
         assignModal: { open: false, userId: null, userName: '', role: '' },
+        deleteModal: { open: false, userId: null, userName: '' },
         openAssignModal(user) {
             this.assignModal = { open: true, userId: user.id, userName: user.name, role: user.role };
+        },
+        openDeleteModal(user) {
+            this.deleteModal = { open: true, userId: user.id, userName: user.name };
         },
     }"
 >
@@ -84,14 +88,26 @@
                             </td>
                             <td class="px-6 py-4 text-slate-400">{{ $user->created_at->locale('id')->translatedFormat('d M Y') }}</td>
                             <td class="px-6 py-4 text-right">
-                                <button
-                                    type="button"
-                                    @click="openAssignModal({ id: {{ $user->id }}, name: @js($user->name), role: @js($userRole?->name ?? '') })"
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/40 hover:bg-gray-700/60 text-gray-400 hover:text-white border border-gray-800/80 transition"
-                                    title="Edit Peran"
-                                >
-                                    <x-admin-icon name="pencil" class="h-4 w-4" />
-                                </button>
+                                <div class="inline-flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        @click="openAssignModal({ id: {{ $user->id }}, name: @js($user->name), role: @js($userRole?->name ?? '') })"
+                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/40 hover:bg-gray-700/60 text-gray-400 hover:text-white border border-gray-800/80 transition"
+                                        title="Edit Peran"
+                                    >
+                                        <x-admin-icon name="pencil" class="h-4 w-4" />
+                                    </button>
+                                    @if ($user->id !== auth()->id())
+                                        <button
+                                            type="button"
+                                            @click="openDeleteModal({ id: {{ $user->id }}, name: @js($user->name) })"
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/40 hover:bg-red-500/20 text-gray-400 hover:text-red-400 border border-gray-800/80 hover:border-red-500/30 transition"
+                                            title="Hapus Pengguna"
+                                        >
+                                            <x-admin-icon name="trash" class="h-4 w-4" />
+                                        </button>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -146,14 +162,26 @@
                             </td>
                             <td class="px-6 py-4 text-slate-400">{{ $user->created_at->locale('id')->translatedFormat('d M Y') }}</td>
                             <td class="px-6 py-4 text-right">
-                                <button
-                                    type="button"
-                                    @click="openAssignModal({ id: {{ $user->id }}, name: @js($user->name), role: @js($userRole?->name ?? '') })"
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/40 hover:bg-gray-700/60 text-gray-400 hover:text-white border border-gray-800/80 transition"
-                                    title="Edit Peran"
-                                >
-                                    <x-admin-icon name="pencil" class="h-4 w-4" />
-                                </button>
+                                <div class="inline-flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        @click="openAssignModal({ id: {{ $user->id }}, name: @js($user->name), role: @js($userRole?->name ?? '') })"
+                                        class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/40 hover:bg-gray-700/60 text-gray-400 hover:text-white border border-gray-800/80 transition"
+                                        title="Edit Peran"
+                                    >
+                                        <x-admin-icon name="pencil" class="h-4 w-4" />
+                                    </button>
+                                    @if ($user->id !== auth()->id())
+                                        <button
+                                            type="button"
+                                            @click="openDeleteModal({ id: {{ $user->id }}, name: @js($user->name) })"
+                                            class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-800/40 hover:bg-red-500/20 text-gray-400 hover:text-red-400 border border-gray-800/80 hover:border-red-500/30 transition"
+                                            title="Hapus Pengguna"
+                                        >
+                                            <x-admin-icon name="trash" class="h-4 w-4" />
+                                        </button>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -234,6 +262,27 @@
                     <button type="button" @click="assignModal.open = false" class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium transition">Batal</button>
                     <button type="submit" class="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-[#12141c] font-semibold transition">Simpan Perubahan</button>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- ============ MODAL: HAPUS PENGGUNA ============ --}}
+    <div x-show="deleteModal.open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/70" @click="deleteModal.open = false"></div>
+        <div x-show="deleteModal.open" x-transition class="relative w-full max-w-md rounded-xl border border-gray-800 bg-[#1a1d26] p-6 shadow-xl">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
+                <h3 class="text-base font-semibold text-white">Hapus Pengguna</h3>
+                <button @click="deleteModal.open = false" class="text-gray-500 hover:text-white"><x-admin-icon name="x" class="h-5 w-5" /></button>
+            </div>
+            <p class="text-sm text-gray-400 mb-6">
+                Yakin ingin menghapus <span class="font-semibold text-white" x-text="deleteModal.userName"></span>?
+                Data terkait (keranjang, riwayat sewa) akan ikut terhapus. Tindakan ini tidak bisa dibatalkan.
+            </p>
+            <form method="POST" :action="deleteModal.userId ? '{{ url('admin/manajemen-user/users') }}/' + deleteModal.userId : '#'" class="flex justify-end gap-2">
+                @csrf
+                @method('DELETE')
+                <button type="button" @click="deleteModal.open = false" class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium transition">Batal</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition">Ya, Hapus</button>
             </form>
         </div>
     </div>
