@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Rental;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,9 +32,32 @@ class ProfileController extends Controller
             $tab = 'orders';
         }
 
+        // Untuk tab orders, ambil data dari database
+        $ordersPaginated = null;
+        if ($tab === 'orders') {
+            $search = request('search', '');
+            $filterStatus = request('filter_status', 'all');
+
+            // Auto-update status berdasarkan tanggal
+            // ongoing -> completed jika end_date sudah lewat
+            Rental::where('user_id', $request->user()->id)
+                ->where('status', 'ongoing')
+                ->whereDate('end_date', '<', now()->toDateString())
+                ->update(['status' => 'completed']);
+
+            $query = Rental::with('gadget')
+                ->where('user_id', $request->user()->id)
+                ->when($search, fn($q) => $q->whereHas('gadget', fn($gq) => $gq->where('name', 'like', "%{$search}%")))
+                ->when($filterStatus !== 'all', fn($q) => $q->where('status', $filterStatus))
+                ->latest();
+
+            $ordersPaginated = $query->paginate(3)->withQueryString();
+        }
+
         return view('customer.profile', [
-            'user'       => $request->user(),
-            'currentTab' => $tab,
+            'user'            => $request->user(),
+            'currentTab'      => $tab,
+            'orders'          => $ordersPaginated,
         ]);
     }
 
@@ -48,6 +72,18 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    public function cancelOrder(Request $request, Rental $rental): RedirectResponse
+    {
+        // Hanya bisa batal jika status masih pending (belum bayar)
+        if ($rental->user_id !== auth()->id() || $rental->status !== 'pending') {
+            return back()->with('error', 'Pesanan tidak bisa dibatalkan.');
+        }
+
+        Rental::where('invoice_code', $rental->invoice_code)->update(['status' => 'cancelled']);
+
+        return back()->with('success', 'Pesanan berhasil dibatalkan.');
     }
 
     public function saveAddress(Request $request): RedirectResponse

@@ -411,201 +411,151 @@
                     </form>
 
                 @elseif($currentTab === 'orders')
-                    <!-- ================= KONTEN 5: PESANAN SAYA (PERSIS MOCKUP DENGAN FILTRASI TAB AKTIF) ================= -->
+                    <!-- ================= KONTEN 5: PESANAN SAYA ================= -->
+                    @php
+                        $statusLabels = [
+                            'pending'   => ['label' => 'Belum Bayar',       'color' => 'text-[#e49322] bg-[#e49322]/10', 'dot' => 'bg-[#e49322]'],
+                            'ongoing'   => ['label' => 'Proses Peminjaman', 'color' => 'text-blue-400 bg-blue-500/10',   'dot' => 'bg-blue-400'],
+                            'completed' => ['label' => 'Selesai',           'color' => 'text-green-400 bg-green-500/10', 'dot' => 'bg-green-400'],
+                            'cancelled' => ['label' => 'Dibatalkan',        'color' => 'text-red-400 bg-red-500/10',     'dot' => 'bg-red-400'],
+                        ];
+                        $currentSearch = request('search', '');
+                        $currentFilter = request('filter_status', 'all');
+                    @endphp
+
                     <div id="orders-app" class="space-y-4">
-                        <!-- Navigation Tab Header -->
-                        <div class="flex items-center gap-6 border-b border-[#1a1f29] pb-px text-xs font-bold text-[#9ca3af] overflow-x-auto whitespace-nowrap">
-                            <button onclick="switchSubTab('all')" id="tab-all" class="subtab-btn pb-3 px-1 text-[#e49322] border-b-2 border-[#e49322] transition">Semua</button>
-                            <button onclick="switchSubTab('unpaid')" id="tab-unpaid" class="subtab-btn pb-3 px-1 hover:text-white transition">Belum Bayar</button>
-                            <button onclick="switchSubTab('processing')" id="tab-processing" class="subtab-btn pb-3 px-1 hover:text-white transition">Dikemas</button>
-                            <button onclick="switchSubTab('shipping')" id="tab-shipping" class="subtab-btn pb-3 px-1 hover:text-white transition">Dikirim</button>
-                            <button onclick="switchSubTab('completed')" id="tab-completed" class="subtab-btn pb-3 px-1 hover:text-white transition">Selesai</button>
-                            <button onclick="switchSubTab('cancelled')" id="tab-cancelled" class="subtab-btn pb-3 px-1 hover:text-white transition">Dibatalkan</button>
+
+                        @if(session('success'))
+                            <div class="bg-green-500/10 border border-green-500/30 text-green-400 text-xs p-3 rounded-xl flex items-center gap-2">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="bg-red-500/10 border border-red-500/30 text-red-400 text-xs p-3 rounded-xl">{{ session('error') }}</div>
+                        @endif
+
+                        {{-- Search Bar --}}
+                        <form method="GET" action="{{ route('orders.index') }}" class="flex gap-2">
+                            <input type="hidden" name="filter_status" value="{{ $currentFilter }}">
+                            <div class="flex-grow relative">
+                                <svg class="w-3.5 h-3.5 text-[#556075] absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                                <input type="text" name="search" value="{{ $currentSearch }}" placeholder="Cari nama produk..."
+                                    class="w-full bg-[#1a1f29] border border-[#242b38] rounded-lg pl-8 pr-3 py-2 text-xs text-white focus:border-[#e49322] focus:outline-none transition">
+                            </div>
+                            <button type="submit" class="bg-[#e49322] text-black text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#c97e1b] transition">Cari</button>
+                            @if($currentSearch)
+                                <a href="{{ route('orders.index', ['filter_status' => $currentFilter]) }}" class="bg-[#1a1f29] border border-[#242b38] text-[#9ca3af] text-xs px-3 py-2 rounded-lg hover:text-white transition">✕</a>
+                            @endif
+                        </form>
+
+                        {{-- Tab Filter --}}
+                        <div class="flex items-center gap-1 border-b border-[#1a1f29] pb-px text-xs font-bold text-[#9ca3af] overflow-x-auto whitespace-nowrap">
+                            @foreach(['all' => 'Semua', 'pending' => 'Belum Bayar', 'ongoing' => 'Proses Peminjaman', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan'] as $val => $label)
+                                <a href="{{ route('orders.index', ['filter_status' => $val, 'search' => $currentSearch]) }}"
+                                   class="pb-3 px-2 transition {{ $currentFilter === $val ? 'text-[#e49322] border-b-2 border-[#e49322]' : 'hover:text-white' }}">
+                                   {{ $label }}
+                                </a>
+                            @endforeach
                         </div>
 
-                        <!-- LIST KARTU PESANAN -->
-                        <div class="space-y-4 mt-4">
+                        {{-- Order Cards --}}
+                        <div class="space-y-4 mt-2">
+                            @forelse($orders as $rental)
+                                @php
+                                    $st = $statusLabels[$rental->status] ?? $statusLabels['pending'];
+                                    $duration = \Carbon\Carbon::parse($rental->start_date)->diffInDays(\Carbon\Carbon::parse($rental->end_date));
+                                @endphp
+                                <div class="bg-[#13161e] border border-[#1a1f29] rounded-xl p-5">
+                                    <div class="flex justify-between items-center border-b border-[#1a1f29] pb-3 mb-4 text-[11px]">
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-3.5 h-3.5 text-[#556075]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                            <span class="font-bold text-white uppercase tracking-wide">GADGETRENT Official</span>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="font-mono text-[#556075]">{{ $rental->invoice_code }}</span>
+                                            <span class="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md flex items-center gap-1.5 {{ $st['color'] }}">
+                                                <span class="h-1.5 w-1.5 rounded-full {{ $st['dot'] }}"></span>{{ $st['label'] }}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                            <!-- ITEM 1: Belum Bayar (Sony A7 III) -->
-                            <div class="order-card bg-[#13161e] border border-[#1a1f29] rounded-xl p-5" data-status="unpaid">
-                                <div class="flex justify-between items-center border-b border-[#1a1f29] pb-3 mb-4 text-[11px]">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-3.5 h-3.5 text-[#556075]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                        <span class="font-bold text-white uppercase tracking-wide">GADGETRENT Official</span>
+                                    <div class="flex gap-4 items-start">
+                                        <div class="h-14 w-14 bg-[#1a1f29] border border-[#242b38] rounded-lg flex items-center justify-center text-[#556075] shrink-0 overflow-hidden">
+                                            @if($rental->gadget->image)
+                                                <img src="{{ asset('images/gadgets/'.$rental->gadget->image) }}" class="w-full h-full object-cover">
+                                            @else
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow min-w-0">
+                                            <h4 class="text-xs font-extrabold text-white truncate">{{ $rental->gadget->name }}</h4>
+                                            <p class="text-[10px] text-[#556075] font-mono mt-0.5">
+                                                {{ \Carbon\Carbon::parse($rental->start_date)->format('d M Y') }} – {{ \Carbon\Carbon::parse($rental->end_date)->format('d M Y') }}
+                                                &nbsp;•&nbsp;{{ $rental->delivery_option === 'pickup' ? 'Ambil di Toko' : 'Kirim ke Alamat' }}
+                                            </p>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <p class="text-[10px] text-[#556075] font-mono">{{ $duration }} hari</p>
+                                            <p class="text-xs font-black text-white mt-0.5">Rp {{ number_format($rental->total_amount ?? $rental->total_price, 0, ',', '.') }}</p>
+                                        </div>
                                     </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="font-mono text-[#556075]">INV-20260712-006</span>
-                                        <span class="bg-[#e49322]/10 text-[#e49322] text-[10px] font-bold font-mono px-2 py-0.5 rounded-md flex items-center gap-1.5">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-[#e49322]"></span>Belum Bayar
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 items-start">
-                                    <div class="h-14 w-14 bg-[#1a1f29] border border-[#242b38] rounded-lg flex items-center justify-center text-[#556075]">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <h4 class="text-xs font-extrabold text-white">Sony A7 III</h4>
-                                        <p class="text-[10px] text-[#556075] font-mono mt-0.5">12–15 Jul 2026  •  Kirim ke Alamat</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-[#556075] font-mono">1 unit × 3 hari</p>
-                                        <p class="text-xs font-black text-white mt-0.5">Rp 1.065.000</p>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center border-t border-[#1a1f29] pt-4 mt-4">
-                                    <div class="text-[11px] text-[#556075]">Total Pesanan: <span class="font-extrabold text-white ml-1 font-mono">Rp 1.065.000</span></div>
-                                    <div class="flex gap-2 text-[11px] font-bold">
-                                        <button class="bg-[#1a1f29] border border-[#242b38] text-white px-4 py-2 rounded-lg hover:bg-[#202531] transition">Batalkan Pesanan</button>
-                                        <button class="bg-[#e49322] text-black px-4 py-2 rounded-lg hover:bg-[#c97e1b] transition">Bayar Sekarang</button>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- ITEM 2: Dikemas (PlayStation 5) -->
-                            <div class="order-card bg-[#13161e] border border-[#1a1f29] rounded-xl p-5" data-status="processing">
-                                <div class="flex justify-between items-center border-b border-[#1a1f29] pb-3 mb-4 text-[11px]">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-3.5 h-3.5 text-[#556075]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                        <span class="font-bold text-white uppercase tracking-wide">GADGETRENT Official</span>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="font-mono text-[#556075]">INV-20260710-002</span>
-                                        <span class="bg-[#3b82f6]/10 text-[#60a5fa] text-[10px] font-bold font-mono px-2 py-0.5 rounded-md flex items-center gap-1.5">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-[#3b82f6]"></span>Dikemas
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 items-start">
-                                    <div class="h-14 w-14 bg-[#1a1f29] border border-[#242b38] rounded-lg flex items-center justify-center text-[#556075]">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11V7a4 4 0 00-8 0v4c0 2.454.636 4.76 1.753 6.76l.053.09m15.548 0L17 17.5m3.441 2.04C18.657 17.799 17.647 14.517 17 11V7a4 4 0 00-8 0v4c0 2.454.636 4.76 1.752 6.76l.053.09M12 3v18"></path></svg>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <h4 class="text-xs font-extrabold text-white">PlayStation 5</h4>
-                                        <p class="text-[10px] text-[#556075] font-mono mt-0.5">10–12 Jul 2026  •  Ambil di Hub Dago</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-[#556075] font-mono">1 unit × 2 hari</p>
-                                        <p class="text-xs font-black text-white mt-0.5">Rp 315.000</p>
+                                    <div class="flex justify-between items-center border-t border-[#1a1f29] pt-4 mt-4">
+                                        <div class="text-[11px] text-[#556075]">Total: <span class="font-extrabold text-white ml-1 font-mono">Rp {{ number_format($rental->total_amount ?? $rental->total_price, 0, ',', '.') }}</span></div>
+                                        <div class="flex gap-2 text-[11px] font-bold">
+                                            @if($rental->status === 'pending')
+                                                <form action="{{ route('orders.cancel', $rental->id) }}" method="POST" onsubmit="return confirm('Batalkan pesanan ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="bg-[#1a1f29] border border-[#242b38] text-white px-4 py-2 rounded-lg hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-400 transition">Batalkan</button>
+                                                </form>
+                                            @elseif($rental->status === 'ongoing')
+                                                <span class="text-blue-400 text-[10px] font-mono">Aktif hingga {{ \Carbon\Carbon::parse($rental->end_date)->format('d M Y') }}</span>
+                                            @elseif($rental->status === 'completed')
+                                                <a href="{{ route('catalog.show', $rental->gadget_id) }}" class="bg-[#e49322] text-black px-4 py-2 rounded-lg hover:bg-[#c97e1b] transition">Sewa Lagi</a>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex justify-between items-center border-t border-[#1a1f29] pt-4 mt-4">
-                                    <div class="text-[11px] text-[#556075]">Total Pesanan: <span class="font-extrabold text-white ml-1 font-mono">Rp 315.000</span></div>
-                                    <div class="flex gap-2 text-[11px] font-bold">
-                                        <button class="bg-[#1a1f29] border border-[#242b38] text-white px-4 py-2 rounded-lg hover:bg-[#202531] transition">Hubungi Penyewa</button>
-                                    </div>
+                            @empty
+                                <div class="py-16 text-center">
+                                    <svg class="w-10 h-10 mx-auto mb-4 text-[#242b38]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                    <p class="text-sm font-bold text-[#475166]">Belum ada pesanan</p>
+                                    <p class="text-xs text-[#556075] mt-1">{{ $currentSearch ? 'Tidak ada hasil untuk "'.$currentSearch.'"' : 'Yuk mulai sewa gadget pertamamu!' }}</p>
+                                    @if(!$currentSearch)
+                                        <a href="{{ route('catalog.index') }}" class="mt-4 inline-block bg-[#e49322] text-black text-xs font-bold px-5 py-2 rounded-lg hover:bg-[#c97e1b] transition">Lihat Katalog</a>
+                                    @endif
                                 </div>
-                            </div>
-
-                            <!-- ITEM 3: Dikirim / Sedang Disewa (Canon EOS R6 Mark II) -->
-                            <div class="order-card bg-[#13161e] border border-[#1a1f29] rounded-xl p-5" data-status="shipping">
-                                <div class="flex justify-between items-center border-b border-[#1a1f29] pb-3 mb-4 text-[11px]">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-3.5 h-3.5 text-[#556075]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                        <span class="font-bold text-white uppercase tracking-wide">GADGETRENT Official</span>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="font-mono text-[#556075]">INV-20260703-001</span>
-                                        <span class="bg-[#e49322]/10 text-[#e49322] text-[10px] font-bold font-mono px-2 py-0.5 rounded-md flex items-center gap-1.5">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-[#e49322]"></span>Sedang Disewa
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 items-start">
-                                    <div class="h-14 w-14 bg-[#1a1f29] border border-[#242b38] rounded-lg flex items-center justify-center text-[#556075]">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <h4 class="text-xs font-extrabold text-white">Canon EOS R6 Mark II</h4>
-                                        <p class="text-[10px] text-[#556075] font-mono mt-0.5">03–06 Jul 2026  •  ongoing</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-[#556075] font-mono">1 unit × 3 hari</p>
-                                        <p class="text-xs font-black text-white mt-0.5">Rp 1.200.000</p>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center border-t border-[#1a1f29] pt-4 mt-4">
-                                    <div class="text-[11px] text-[#556075]">Total Pesanan: <span class="font-extrabold text-white ml-1 font-mono">Rp 1.200.000</span></div>
-                                    <div class="flex gap-2 text-[11px] font-bold">
-                                        <button class="bg-[#1a1f29] border border-[#242b38] text-white px-4 py-2 rounded-lg hover:bg-[#202531] transition">Lacak Pesanan</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- ITEM 4: Selesai (MacBook Air M2) -->
-                            <div class="order-card bg-[#13161e] border border-[#1a1f29] rounded-xl p-5" data-status="completed">
-                                <div class="flex justify-between items-center border-b border-[#1a1f29] pb-3 mb-4 text-[11px]">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-3.5 h-3.5 text-[#556075]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                        <span class="font-bold text-white uppercase tracking-wide">GADGETRENT Official</span>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="font-mono text-[#556075]">INV-20260625-003</span>
-                                        <span class="bg-[#10b981]/10 text-[#34d399] text-[10px] font-bold font-mono px-2 py-0.5 rounded-md flex items-center gap-1.5">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-[#10b981]"></span>Selesai
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 items-start">
-                                    <div class="h-14 w-14 bg-[#1a1f29] border border-[#242b38] rounded-lg flex items-center justify-center text-[#556075]">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 21h6l-.75-4M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <h4 class="text-xs font-extrabold text-white">MacBook Air M2</h4>
-                                        <p class="text-[10px] text-[#556075] font-mono mt-0.5">20–25 Jun 2026  •  completed</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-[#556075] font-mono">1 unit × 5 hari</p>
-                                        <p class="text-xs font-black text-white mt-0.5">Rp 1.250.000</p>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center border-t border-[#1a1f29] pt-4 mt-4">
-                                    <div class="text-[11px] text-[#556075]">Total Pesanan: <span class="font-extrabold text-white ml-1 font-mono">Rp 1.250.000</span></div>
-                                    <div class="flex gap-2 text-[11px] font-bold">
-                                        <button class="bg-[#1a1f29] border border-[#242b38] text-white px-4 py-2 rounded-lg hover:bg-[#202531] transition">Ajukan Komplain</button>
-                                        <button class="bg-[#1a1f29] border border-[#242b38] text-white px-4 py-2 rounded-lg hover:bg-[#202531] transition">Beri Penilaian</button>
-                                        <button class="bg-[#e49322] text-black px-4 py-2 rounded-lg hover:bg-[#c97e1b] transition">Sewa Lagi</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- ITEM 5: Dibatalkan (Nintendo Switch OLED) -->
-                            <div class="order-card bg-[#13161e] border border-[#1a1f29] rounded-xl p-5" data-status="cancelled">
-                                <div class="flex justify-between items-center border-b border-[#1a1f29] pb-3 mb-4 text-[11px]">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-3.5 h-3.5 text-[#556075]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                        <span class="font-bold text-white uppercase tracking-wide">GADGETRENT Official</span>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span class="font-mono text-[#556075]">INV-20260618-011</span>
-                                        <span class="bg-[#ef4444]/10 text-[#f87171] text-[10px] font-bold font-mono px-2 py-0.5 rounded-md flex items-center gap-1.5">
-                                            <span class="h-1.5 w-1.5 rounded-full bg-[#ef4444]"></span>Dibatalkan
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 items-start">
-                                    <div class="h-14 w-14 bg-[#1a1f29] border border-[#242b38] rounded-lg flex items-center justify-center text-[#556075]">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.243.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                                    </div>
-                                    <div class="flex-grow">
-                                        <h4 class="text-xs font-extrabold text-white">Nintendo Switch OLED</h4>
-                                        <p class="text-[10px] text-[#556075] font-mono mt-0.5">18 Jun 2026  •  dibatalkan oleh sistem</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-[#556075] font-mono">1 unit × 2 hari</p>
-                                        <p class="text-xs font-black text-white mt-0.5">Rp 200.000</p>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center border-t border-[#1a1f29] pt-4 mt-4">
-                                    <div class="text-[11px] text-[#556075]">Alasan: <span class="font-extrabold text-white ml-1">Pembayaran tidak diselesaikan</span></div>
-                                    <div class="flex gap-2 text-[11px] font-bold">
-                                        <button class="bg-[#e49322] text-black px-4 py-2 rounded-lg hover:bg-[#c97e1b] transition">Pesan Lagi</button>
-                                    </div>
-                                </div>
-                            </div>
-
+                            @endforelse
                         </div>
-                    </div>
+
+                        {{-- Pagination --}}
+                        @if($orders && $orders->lastPage() > 1)
+                            <div class="flex items-center justify-center gap-2 mt-6 flex-wrap">
+                                @if($orders->onFirstPage())
+                                    <span class="px-3 py-1.5 rounded-lg bg-[#1a1f29] text-[#475166] text-xs cursor-not-allowed">← Prev</span>
+                                @else
+                                    <a href="{{ $orders->previousPageUrl() }}" class="px-3 py-1.5 rounded-lg bg-[#1a1f29] border border-[#242b38] text-[#9ca3af] text-xs hover:text-white transition">← Prev</a>
+                                @endif
+
+                                @for($p = 1; $p <= $orders->lastPage(); $p++)
+                                    <a href="{{ $orders->url($p) }}" class="px-3 py-1.5 rounded-lg text-xs font-bold transition {{ $p === $orders->currentPage() ? 'bg-[#e49322] text-black' : 'bg-[#1a1f29] border border-[#242b38] text-[#9ca3af] hover:text-white' }}">{{ $p }}</a>
+                                @endfor
+
+                                @if($orders->hasMorePages())
+                                    <a href="{{ $orders->nextPageUrl() }}" class="px-3 py-1.5 rounded-lg bg-[#1a1f29] border border-[#242b38] text-[#9ca3af] text-xs hover:text-white transition">Next →</a>
+                                @else
+                                    <span class="px-3 py-1.5 rounded-lg bg-[#1a1f29] text-[#475166] text-xs cursor-not-allowed">Next →</span>
+                                @endif
+                            </div>
+                        @endif
+
+            </div>
+        </div>
+    </main>
+
+
                 @endif
 
             </div>

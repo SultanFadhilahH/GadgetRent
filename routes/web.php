@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     // GANTI BAGIAN INI: Sekarang mengarah ke ProfileController agar tampilan layout-nya ikut ke-render
     Route::get('/password/edit', [ProfileController::class, 'edit'])->name('password.edit');
     Route::get('/orders', [ProfileController::class, 'edit'])->name('orders.index');
+    Route::delete('/orders/{rental}/cancel', [ProfileController::class, 'cancelOrder'])->name('orders.cancel');
     
     // Cart Routes
     Route::post('/cart', [\App\Http\Controllers\CartController::class, 'store'])->name('cart.store');
