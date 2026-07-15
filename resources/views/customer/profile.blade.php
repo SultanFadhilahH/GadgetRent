@@ -239,7 +239,7 @@
                                             <svg class="w-6 h-6 text-[#9ca3af] group-hover:text-[#e49322]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                                         </div>
                                         <span class="text-sm text-white font-bold block mb-1">Klik untuk memilih file</span>
-                                        <span class="text-xs text-[#556075]">JPG/PNG maksimal 2MB</span>
+                                        <span class="text-xs text-[#556075]">JPG/PNG maksimal 5MB</span>
                                     </div>
                                     
                                     <div x-show="isUploading" class="flex flex-col items-center">
