@@ -39,4 +39,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rental::class);
     }
+
+    /**
+     * Get the carts belonging to this user (customer).
+     */
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

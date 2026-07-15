@@ -157,8 +157,15 @@
 
                 <div class="flex flex-wrap gap-3 mb-10">
                     @if ($gadget->status == 'available')
-                        <button type="button" class="bg-amber-500 hover:bg-amber-600 text-[#12141c] font-bold px-6 py-2.5 rounded-lg transition text-sm">Pinjam Sekarang</button>
-                        <button type="button" class="bg-[#1a1d26] border border-gray-700 hover:bg-gray-800 text-white font-bold px-6 py-2.5 rounded-lg transition text-sm">Tambah ke Keranjang</button>
+                        <form action="{{ route('checkout.direct', $gadget->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-[#12141c] font-bold px-6 py-2.5 rounded-lg transition text-sm">Pinjam Sekarang</button>
+                        </form>
+                        <form action="{{ route('cart.store') }}" method="POST" class="inline">
+                            @csrf
+                            <input type="hidden" name="gadget_id" value="{{ $gadget->id }}">
+                            <button type="submit" class="bg-[#1a1d26] border border-gray-700 hover:bg-gray-800 text-white font-bold px-6 py-2.5 rounded-lg transition text-sm">Tambah ke Keranjang</button>
+                        </form>
                     @else
                         <button type="button" disabled class="bg-gray-800 text-gray-500 font-bold px-6 py-2.5 rounded-lg text-sm cursor-not-allowed">Unit Sedang Tidak Tersedia</button>
                     @endif
