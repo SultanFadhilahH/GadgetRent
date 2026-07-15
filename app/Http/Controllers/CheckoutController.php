@@ -52,8 +52,8 @@ class CheckoutController extends Controller
             $items = $carts;
         }
 
-        $vouchers = Voucher::where('status', 'active')
-            ->where('valid_until', '>=', now())
+        $vouchers = Voucher::where('is_active', true)
+            ->where('end_date', '>=', now())
             ->get();
 
         return view('customer.checkout', compact('items', 'vouchers', 'user'));
@@ -114,9 +114,9 @@ class CheckoutController extends Controller
         }
 
         if ($voucher) {
-            $discountAmount = $voucher->discount_type === 'percentage'
-                ? ($totalPrice * $voucher->discount_amount) / 100
-                : $voucher->discount_amount;
+            $discountAmount = $voucher->discount_type === 'percent'
+                ? ($totalPrice * $voucher->discount_value) / 100
+                : $voucher->discount_value;
         }
 
         $finalAmount    = max(0, $totalPrice - $discountAmount);
