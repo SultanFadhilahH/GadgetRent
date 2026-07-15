@@ -24,6 +24,7 @@
         </div>
 
         <div class="flex items-center gap-4">
+            @include('components.navbar-cart')
             @auth
                 <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                     <button @click="open = !open" class="flex items-center gap-3 hover:opacity-80 transition focus:outline-none">

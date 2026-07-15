@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/identity-verification', [ProfileController::class, 'edit'])->name('profile.identity');
     Route::post('/profile/verify-ktp', [ProfileController::class, 'verifyKtp'])->name('profile.verifyKtp');
     Route::get('/addresses', [ProfileController::class, 'edit'])->name('addresses.index');
+    Route::post('/addresses', [ProfileController::class, 'saveAddress'])->name('addresses.save');
 
     // GANTI BAGIAN INI: Sekarang mengarah ke ProfileController agar tampilan layout-nya ikut ke-render
     Route::get('/password/edit', [ProfileController::class, 'edit'])->name('password.edit');

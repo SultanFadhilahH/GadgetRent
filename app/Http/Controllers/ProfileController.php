@@ -50,6 +50,27 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
+    public function saveAddress(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'province'       => 'required|string|max:100',
+            'city'           => 'required|string|max:100',
+            'district'       => 'nullable|string|max:100',
+            'postal_code'    => 'nullable|string|max:10',
+            'address_detail' => 'required|string|max:500',
+        ]);
+
+        $request->user()->update([
+            'province'       => $request->province,
+            'city'           => $request->city,
+            'district'       => $request->district,
+            'postal_code'    => $request->postal_code,
+            'address_detail' => $request->address_detail,
+        ]);
+
+        return Redirect::route('addresses.index')->with('status', 'address-saved');
+    }
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
