@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReturnController;
@@ -67,9 +66,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::post('/manajemen-user/users', [UserManagementController::class, 'storeUser'])->name('users.users.store');
     Route::put('/manajemen-user/users/{user}/role', [UserManagementController::class, 'updateUserRole'])->name('users.users.updateRole');
     Route::delete('/manajemen-user/users/{user}', [UserManagementController::class, 'destroyUser'])->name('users.users.destroy');
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
-    Route::post('/laporan/export-bulanan', [LaporanController::class, 'exportBulanan'])->name('laporan.export-bulanan');
-    Route::post('/laporan/export-semua', [LaporanController::class, 'exportSemua'])->name('laporan.export-semua');
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
     Route::resource('gadgets', GadgetController::class)->except(['create', 'edit', 'show']);
     Route::resource('categories', CategoryController::class)->except(['create', 'edit', 'show']);

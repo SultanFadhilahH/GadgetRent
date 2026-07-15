@@ -11,7 +11,7 @@ class ReturnController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Rental::with(['customer', 'gadget'])->whereIn('status', ['ongoing', 'overdue']);
+        $query = Rental::with(['customer', 'gadget', 'user'])->whereIn('status', ['ongoing', 'overdue']);
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -21,6 +21,7 @@ class ReturnController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->whereHas('customer', fn ($q) => $q->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('user', fn ($q) => $q->where('name', 'like', "%{$search}%"))
                     ->orWhereHas('gadget', fn ($q) => $q->where('name', 'like', "%{$search}%"));
             });
         }
