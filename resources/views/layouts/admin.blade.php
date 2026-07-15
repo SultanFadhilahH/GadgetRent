@@ -83,12 +83,6 @@
                                 <span>Manajemen User</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="{{ route('admin.laporan') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition {{ request()->routeIs('admin.laporan*') ? 'bg-[#222632] text-white border-l-4 border-amber-500 rounded-l-none' : 'text-gray-400 hover:bg-[#222632] hover:text-white transition' }}">
-                                <x-admin-icon name="report" class="h-5 w-5 shrink-0" />
-                                <span>Laporan</span>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
 

@@ -6,22 +6,13 @@
 <div class="space-y-6">
 
     {{-- ── PAGE HEADER ─────────────────────────────────────────────── --}}
-    <div class="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-            <h1 class="text-2xl font-bold tracking-tight text-white" style="font-family:'Space Grotesk',sans-serif;">
-                Dashboard
-            </h1>
-            <p class="text-xs text-slate-500 mt-1">
-                Ringkasan operasional GadgetRent — {{ now()->locale('id')->translatedFormat('d M Y') }}
-            </p>
-        </div>
-        <a href="{{ route('admin.gadgets.index') }}"
-           class="inline-flex items-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-4 py-2.5 transition">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4">
-                <path d="M7 1v12M1 7h12"/>
-            </svg>
-            Tambah Gadget
-        </a>
+    <div>
+        <h1 class="text-2xl font-bold tracking-tight text-white" style="font-family:'Space Grotesk',sans-serif;">
+            Dashboard
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">
+            Ringkasan operasional GadgetRent — {{ now()->locale('id')->translatedFormat('d M Y') }}
+        </p>
     </div>
 
     {{-- ── STAT CARDS ───────────────────────────────────────────────── --}}

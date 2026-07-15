@@ -65,7 +65,7 @@
                             $processData = [
                                 'id' => $rental->id,
                                 'invoice_code' => $rental->invoice_code,
-                                'customer_name' => $rental->customer->name,
+                                'customer_name' => $rental->customer->name ?? $rental->user->name ?? '-',
                                 'gadget_name' => $rental->gadget->name,
                                 'start_date' => $rental->start_date,
                                 'end_date' => $rental->end_date,
@@ -75,7 +75,7 @@
                         @endphp
                         <tr class="hover:bg-[#1f232e]/30 transition">
                             <td class="px-6 py-4 font-mono text-xs text-gray-300 font-semibold">{{ $rental->invoice_code }}</td>
-                            <td class="px-6 py-4 text-white font-medium">{{ $rental->customer->name }}</td>
+                            <td class="px-6 py-4 text-white font-medium">{{ $rental->customer->name ?? $rental->user->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-gray-300">{{ $rental->gadget->name }}</td>
                             <td class="px-6 py-4 text-gray-400">{{ \Carbon\Carbon::parse($rental->end_date)->translatedFormat('d M Y') }}</td>
                             <td class="px-6 py-4">

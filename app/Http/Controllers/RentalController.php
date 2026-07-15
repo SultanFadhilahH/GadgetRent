@@ -10,7 +10,7 @@ class RentalController extends Controller
     public function index(Request $request)
     {
         // Mengambil query dasar beserta data relasi customer dan gadget
-        $query = Rental::with(['customer', 'gadget']);
+        $query = Rental::with(['customer', 'gadget', 'user']);
 
         // Filter berdasarkan status tab (Ongoing, Completed, Overdue) jika diklik
         if ($request->has('status') && $request->status != '') {

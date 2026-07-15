@@ -68,7 +68,7 @@
                             {{ $rental->invoice_code }}
                         </td>
                         <td class="px-6 py-4 text-white font-medium">
-                            {{ $rental->customer->name }}
+                            {{ $rental->customer->name ?? $rental->user->name ?? '-' }}
                         </td>
                         <td class="px-6 py-4 text-gray-300">
                             {{ $rental->gadget->name }}
