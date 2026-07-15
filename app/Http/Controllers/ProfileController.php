@@ -101,7 +101,10 @@ class ProfileController extends Controller
         $fullPath = storage_path('app/public/' . $path);
 
         try {
-            $apiKey = env('OCR_SPACE_API_KEY', 'hqsE85878982957');
+            // "helloworld" adalah demo key publik resmi OCR.Space (dibagi bersama semua
+            // pengguna, jadi bisa kena rate-limit). Daftar key gratis milik sendiri di
+            // https://ocr.space/ocrapi/freekey lalu isi OCR_SPACE_API_KEY di .env.
+            $apiKey = env('OCR_SPACE_API_KEY') ?: 'helloworld';
 
             // Kirim gambar ke OCR.Space API
             $response = Http::timeout(60)
