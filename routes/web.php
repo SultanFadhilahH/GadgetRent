@@ -72,7 +72,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:Admin'])->name('ad
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/pengembalian', [ReturnController::class, 'index'])->name('returns.index');
     Route::put('/pengembalian/{rental}', [ReturnController::class, 'process'])->name('returns.process');
-    Route::resource('vouchers', \App\Http\Controllers\Admin\VoucherController::class)->except(['show']);
+    Route::resource('vouchers', \App\Http\Controllers\Admin\VoucherController::class)->except(['show', 'create', 'edit']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

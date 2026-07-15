@@ -38,6 +38,24 @@ class VoucherController extends Controller
         return redirect()->route('admin.vouchers.index')->with('success', 'Voucher berhasil ditambahkan!');
     }
 
+    public function update(Request $request, Voucher $voucher)
+    {
+        $validated = $request->validate([
+            'code' => 'required|string|unique:vouchers,code,'.$voucher->id.'|max:255',
+            'discount_type' => 'required|in:percent,nominal',
+            'discount_value' => 'required|numeric|min:1',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $validated['code'] = strtoupper($validated['code']);
+        $validated['is_active'] = $request->boolean('is_active');
+
+        $voucher->update($validated);
+
+        return redirect()->route('admin.vouchers.index')->with('success', 'Voucher berhasil diperbarui!');
+    }
+
     public function destroy(Voucher $voucher)
     {
         $voucher->delete();

@@ -3,7 +3,13 @@
 @section('title', 'Voucher')
 
 @section('content')
-<div class="space-y-6" x-data="{ addModalOpen: false }">
+<div class="space-y-6" x-data="{
+        addModalOpen: false,
+        editModal: { open: false, id: null, code: '', discount_type: 'percent', discount_value: '', start_date: '', end_date: '', is_active: true },
+        openEdit(voucher) {
+            this.editModal = { open: true, ...voucher };
+        }
+    }">
 
     {{-- ── PAGE HEADER ─────────────────────────────────────────────── --}}
     <div class="flex items-start justify-between gap-4 flex-wrap">
@@ -112,7 +118,17 @@
                             </td>
                             <td class="px-5 py-4 text-right">
                                 <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button class="rounded p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition" title="Edit">
+                                    <button type="button"
+                                        @click="openEdit({
+                                            id: {{ $voucher->id }},
+                                            code: @js($voucher->code),
+                                            discount_type: @js($voucher->discount_type),
+                                            discount_value: {{ $voucher->discount_value }},
+                                            start_date: @js($voucher->start_date?->format('Y-m-d')),
+                                            end_date: @js($voucher->end_date?->format('Y-m-d')),
+                                            is_active: {{ $voucher->is_active ? 'true' : 'false' }}
+                                        })"
+                                        class="rounded p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition" title="Edit">
                                         <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
                                         </svg>
@@ -182,6 +198,57 @@
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/5">
                     <button type="button" @click="addModalOpen = false" class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition">Batal</button>
                     <button type="submit" class="rounded-lg bg-amber-500 hover:bg-amber-400 px-4 py-2 text-sm font-bold text-black transition">Simpan Voucher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- ── MODAL EDIT VOUCHER ────────────────────────────────────────── --}}
+    <div x-show="editModal.open" class="fixed inset-0 z-50 flex items-center justify-center p-4" x-cloak style="display: none;">
+        <div x-show="editModal.open" x-transition.opacity class="fixed inset-0 bg-black/60 backdrop-blur-sm" @click="editModal.open = false"></div>
+        <div x-show="editModal.open" x-transition.scale.origin.bottom class="relative w-full max-w-lg rounded-xl bg-[#1a1d26] border border-white/10 shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between border-b border-white/5 px-6 py-4">
+                <h3 class="text-lg font-bold text-white" style="font-family:'Space Grotesk',sans-serif;">Edit Voucher</h3>
+                <button @click="editModal.open = false" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+            </div>
+            <form :action="editModal.id ? '{{ url('admin/vouchers') }}/' + editModal.id : '#'" method="POST" class="p-6 space-y-5">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Kode Voucher</label>
+                    <input type="text" name="code" x-model="editModal.code" required class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none uppercase">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Tipe Diskon</label>
+                        <select name="discount_type" x-model="editModal.discount_type" required class="w-full rounded-lg border border-white/10 bg-[#222632] px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none">
+                            <option value="percent">Persen (%)</option>
+                            <option value="nominal">Nominal (Rp)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nilai Diskon</label>
+                        <input type="number" name="discount_value" x-model="editModal.discount_value" required class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Tanggal Mulai</label>
+                        <input type="date" name="start_date" x-model="editModal.start_date" class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Tanggal Kadaluarsa</label>
+                        <input type="date" name="end_date" x-model="editModal.end_date" class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-300 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 outline-none">
+                    </div>
+                </div>
+                <label class="flex items-center gap-2 text-sm text-slate-300">
+                    <input type="checkbox" name="is_active" value="1" x-model="editModal.is_active" class="rounded border-white/10 bg-white/5 text-amber-500 focus:ring-amber-500">
+                    Voucher aktif
+                </label>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/5">
+                    <button type="button" @click="editModal.open = false" class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition">Batal</button>
+                    <button type="submit" class="rounded-lg bg-amber-500 hover:bg-amber-400 px-4 py-2 text-sm font-bold text-black transition">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
