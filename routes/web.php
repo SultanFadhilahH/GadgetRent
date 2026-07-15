@@ -82,8 +82,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/rentals', [RentalController::class, 'index'])->name('rentals.index');
 });
 
-Route::get('/about', function () {
-    return view('customer.about');
-})->name('customer.about');
-
 require __DIR__.'/auth.php';

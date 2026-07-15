@@ -21,19 +21,7 @@
     @endphp
 
     <!-- Navbar -->
-    <nav class="border-b border-gray-900 bg-[#0b0c10] py-4 px-6 md:px-12 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <span class="flex h-4 w-4 rotate-45 items-center justify-center rounded-sm bg-amber-500"></span>
-            <span class="text-sm font-bold tracking-wide text-white uppercase">GADGETRENT</span>
-        </div>
-        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
-            <a href="/" class="hover:text-white transition">Home</a>
-            <a href="{{ route('catalog.index') }}" class="hover:text-white transition">Katalog</a>
-        </div>
-        <div class="flex items-center gap-4">
-            <a href="{{ route('profile.edit') }}" class="text-sm text-gray-400 hover:text-white">{{ auth()->user()->name }}</a>
-        </div>
-    </nav>
+    <x-customer-navbar />
 
     <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-6 md:px-12 py-10" x-data="checkoutForm()">
