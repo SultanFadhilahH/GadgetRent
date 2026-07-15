@@ -27,13 +27,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button class="flex items-center gap-2 text-xs font-bold bg-[#13161e] border border-[#242b38] px-3 py-2 rounded-lg text-white hover:bg-[#1a1f29] transition relative">
-                <svg class="w-4 h-4 text-[#9ca3af]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                <span>Keranjang</span>
-                <span class="absolute -top-1.5 -right-1.5 bg-[#e49322] text-black text-[9px] rounded-full h-4 w-4 flex items-center justify-center font-black">2</span>
-            </button>
+            @include('components.navbar-cart')
             <div class="h-8 w-8 bg-[#e49322] rounded-md flex items-center justify-center text-black font-extrabold text-xs uppercase shadow-md shadow-[#e49322]/10">
                 {{ substr(auth()->user()->name, 0, 2) }}
             </div>
