@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
+use Throwable;
 
 class GoogleController extends Controller
 {
@@ -23,7 +25,15 @@ class GoogleController extends Controller
      */
     public function callback(): RedirectResponse
     {
-        $googleUser = Socialite::driver('google')->user();
+        try {
+            $googleUser = Socialite::driver('google')->user();
+        } catch (InvalidStateException) {
+            return redirect()->route('login')
+                ->withErrors(['google' => 'Sesi login Google sudah kedaluwarsa atau tidak valid. Silakan coba lagi.']);
+        } catch (Throwable) {
+            return redirect()->route('login')
+                ->withErrors(['google' => 'Gagal masuk dengan Google. Silakan coba lagi.']);
+        }
 
         $user = User::where('google_id', $googleUser->getId())->first();
 

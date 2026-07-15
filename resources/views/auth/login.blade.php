@@ -13,6 +13,7 @@
             </div>
 
             <x-auth-session-status class="mb-4 text-xs" :status="session('status')" />
+            <x-input-error :messages="$errors->get('google')" class="mb-3 text-xs" />
             <x-input-error :messages="$errors->get('email')" class="mb-3 text-xs" />
             <x-input-error :messages="$errors->get('password')" class="mb-3 text-xs" />
 
