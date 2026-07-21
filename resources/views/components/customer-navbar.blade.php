@@ -15,6 +15,7 @@
 
     <div class="flex items-center gap-4">
         <x-navbar-cart />
+        <x-navbar-return-reminder />
 
         @auth
             <div class="relative" x-data="{ open: false }" @click.outside="open = false">
