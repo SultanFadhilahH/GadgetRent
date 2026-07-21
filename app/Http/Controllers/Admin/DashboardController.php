@@ -52,6 +52,18 @@ class DashboardController extends Controller
         $chartLabels = $chartData->pluck('label');
         $chartValues = $chartData->pluck('total');
 
+        // ── Grafik Kategori Produk Terlaris (Pie Chart) ───────────────
+        $pieData = Rental::join('gadgets', 'rentals.gadget_id', '=', 'gadgets.id')
+            ->join('categories', 'gadgets.category_id', '=', 'categories.id')
+            ->selectRaw('categories.name as label, count(rentals.id) as total')
+            ->groupBy('categories.id', 'categories.name')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
+
+        $pieLabels = $pieData->pluck('label');
+        $pieValues = $pieData->pluck('total');
+
         return view('dashboard', compact(
             'totalGadgets',
             'totalCategories',
@@ -63,6 +75,8 @@ class DashboardController extends Controller
             'completedBulanIni',
             'chartLabels',
             'chartValues',
+            'pieLabels',
+            'pieValues',
         ));
     }
 }

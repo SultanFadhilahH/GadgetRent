@@ -76,22 +76,45 @@
 
     </div>
 
-    {{-- ── GRAFIK PENJUALAN ──────────────────────────────────────────── --}}
-    <div class="rounded-xl border border-white/5 bg-[#1a1d26] overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
-            <h2 class="font-semibold text-white text-sm" style="font-family:'Space Grotesk',sans-serif;">
-                Grafik Penjualan
-            </h2>
-            <span class="text-[11px] text-slate-500" style="font-family:'JetBrains Mono',monospace;">
-                6 bulan terakhir
-            </span>
-        </div>
+    {{-- ── CHARTS ROW ──────────────────────────────────────────── --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <div class="p-5">
-            <div class="h-56 sm:h-64">
-                <canvas id="dashboardChart"></canvas>
+        {{-- Grafik Penjualan (2 Kolom) --}}
+        <div class="lg:col-span-2 rounded-xl border border-white/5 bg-[#1a1d26] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                <h2 class="font-semibold text-white text-sm" style="font-family:'Space Grotesk',sans-serif;">
+                    Grafik Penjualan
+                </h2>
+                <span class="text-[11px] text-slate-500" style="font-family:'JetBrains Mono',monospace;">
+                    6 bulan terakhir
+                </span>
+            </div>
+
+            <div class="p-5 flex-1 flex flex-col justify-center">
+                <div class="h-56 sm:h-64">
+                    <canvas id="dashboardChart"></canvas>
+                </div>
             </div>
         </div>
+
+        {{-- Grafik Kategori Terlaris (1 Kolom, Pie Chart) --}}
+        <div class="rounded-xl border border-white/5 bg-[#1a1d26] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between px-5 py-4 border-b border-white/5">
+                <h2 class="font-semibold text-white text-sm" style="font-family:'Space Grotesk',sans-serif;">
+                    Kategori Terlaris
+                </h2>
+                <span class="text-[11px] text-slate-500" style="font-family:'JetBrains Mono',monospace;">
+                    Berdasarkan rental
+                </span>
+            </div>
+
+            <div class="p-5 flex-1 flex flex-col justify-center">
+                <div class="h-56 sm:h-64">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -177,6 +200,59 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }]
     });
+
+    // ── Pie Chart Kategori Terlaris ───────────────────────────────────
+    const pieLabels = {!! json_encode($pieLabels ?? []) !!};
+    const pieValues = {!! json_encode($pieValues ?? []) !!};
+
+    const ctxPie = document.getElementById('pieChart');
+    if (ctxPie) {
+        new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: pieLabels,
+                datasets: [{
+                    data: pieValues,
+                    backgroundColor: [
+                        'rgba(232,163,61,0.85)',
+                        'rgba(59,130,246,0.85)',
+                        'rgba(16,185,129,0.85)',
+                        'rgba(239,68,68,0.85)',
+                        'rgba(139,92,246,0.85)'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#1a1d26',
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#94999F',
+                            font: { family: "'Space Grotesk', sans-serif", size: 12 },
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1C2025',
+                        borderColor: 'rgba(241,239,234,0.08)',
+                        borderWidth: 1,
+                        titleColor: '#94999F',
+                        bodyColor: '#F1EFEA',
+                        padding: 10,
+                        callbacks: {
+                            label: (item) => ' ' + item.parsed + ' disewa'
+                        }
+                    }
+                }
+            }
+        });
+    }
 });
 </script>
 @endsection
