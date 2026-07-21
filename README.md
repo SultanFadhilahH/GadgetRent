@@ -1,10 +1,10 @@
-# GadgetRent 📱📸
+# GadgetRent
 
 Aplikasi manajemen penyewaan gadget (kamera, laptop, dan konsol game) berbasis web yang dikembangkan menggunakan **Laravel 10** dan **Tailwind CSS**. Aplikasi ini memiliki sistem *multi-role* (Admin, Staff, Customer), dashboard analitik, dan manajemen transaksi sewa-menyewa gadget.
 
 ---
 
-## 👥 Nama Tim
+## Nama Tim
 
 - **Darel Saffana Darmawan** (230102032)
 - **Daren Saffana Darmawan** (230102033)
@@ -13,7 +13,7 @@ Aplikasi manajemen penyewaan gadget (kamera, laptop, dan konsol game) berbasis w
 
 ---
 
-## 🚀 Fitur Aplikasi (Daftar Fitur)
+## Fitur Aplikasi (Daftar Fitur)
 
 1. **Autentikasi & Multi-Role System**
    - Terdapat 3 role: Admin, Staff, dan Customer (dikelola dengan Spatie Permission).
@@ -35,7 +35,7 @@ Aplikasi manajemen penyewaan gadget (kamera, laptop, dan konsol game) berbasis w
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend:** Laravel 10 (PHP)
 - **Frontend:** Blade Templating, Tailwind CSS
@@ -47,7 +47,7 @@ Aplikasi manajemen penyewaan gadget (kamera, laptop, dan konsol game) berbasis w
 
 ---
 
-## ⚙️ Dokumentasi Instalasi
+## Dokumentasi Instalasi
 
 Ikuti langkah-langkah di bawah ini untuk menjalankan aplikasi di lokal (laptop/komputer Anda):
 
@@ -104,7 +104,7 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan aplikasi di lokal (laptop/k
 
 ---
 
-## 🔑 Akun Default (Login)
+## Akun Default (Login)
 
 Setelah instalasi dan proses `seeder` selesai, Anda dapat mencoba login menggunakan akun-akun *default* di bawah ini:
 
@@ -116,13 +116,13 @@ Setelah instalasi dan proses `seeder` selesai, Anda dapat mencoba login mengguna
 
 ---
 
-## 📊 Entity Relationship Diagram (ERD)
+## Entity Relationship Diagram (ERD)
 
 ![ERD GadgetRent](screenshots/ERD.jpeg)
 
 ---
 
-## 📸 Screenshot Aplikasi
+## Screenshot Aplikasi
 
 ### 1. Halaman Login
 ![Login](screenshots/login.png)
