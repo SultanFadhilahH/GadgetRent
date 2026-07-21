@@ -1,58 +1,143 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GadgetRent 📱📸
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi manajemen penyewaan gadget (kamera, laptop, dan konsol game) berbasis web yang dikembangkan menggunakan **Laravel 10** dan **Tailwind CSS**. Aplikasi ini memiliki sistem *multi-role* (Admin, Staff, Customer), dashboard analitik, dan manajemen transaksi sewa-menyewa gadget.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 👥 Nama Tim
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Darel Saffana Darmawan** (230102032)
+- **Daren Saffana Darmawan** (230102033)
+- **Fachri Fatrian Nugraha** (230102041)
+- **Sultan Fadhilah Hilmiqashmal** (230102123)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🚀 Fitur Aplikasi (Daftar Fitur)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Autentikasi & Multi-Role System**
+   - Terdapat 3 role: Admin, Staff, dan Customer (dikelola dengan Spatie Permission).
+   - Akses navigasi yang berbeda menyesuaikan dengan hak akses (Role) yang dimiliki.
+2. **Dashboard Analitik**
+   - Menampilkan total gadget, kategori, jumlah yang disewa, serta estimasi pendapatan bulan ini.
+   - Grafik penjualan bulanan (Bar Chart) dan kategori terlaris (Pie Chart).
+3. **Manajemen Gadget & Kategori (CRUD)**
+   - Menambah, mengedit, melihat detail, dan menghapus data kategori serta gadget beserta spesifikasi detailnya.
+4. **Sistem Peminjaman (Transactions)**
+   - Proses penyewaan dari awal hingga selesai (pengembalian).
+   - Perhitungan total harga harian.
+5. **Manajemen Pengguna & Customer**
+   - Pendataan *Customer* lengkap dengan NIK dan alamat.
+   - Manajemen *Role* untuk tiap pengguna (Admin/Staff/Customer).
+6. **Blog & Voucher Diskon**
+   - Fitur artikel (Blog) seputar tips teknologi/gadget.
+   - Sistem Voucher untuk potongan harga penyewaan.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🛠️ Tech Stack
 
-## Agentic Development
+- **Backend:** Laravel 10 (PHP)
+- **Frontend:** Blade Templating, Tailwind CSS
+- **Database:** MySQL
+- **Charts / Visualisasi:** Chart.js
+- **Packages Utama:**
+  - `spatie/laravel-permission` (Role & Hak Akses)
+  - `laravel/breeze` (Sistem Autentikasi Starter)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## ⚙️ Dokumentasi Instalasi
 
-php artisan boost:install
-```
+Ikuti langkah-langkah di bawah ini untuk menjalankan aplikasi di lokal (laptop/komputer Anda):
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+1. **Clone repository ini**
+   ```bash
+   git clone https://github.com/SultanFadhilahH/GadgetRent.git
+   cd GadgetRent
+   ```
 
-## Contributing
+2. **Install dependensi PHP (Composer) dan Node.js (NPM)**
+   ```bash
+   composer install
+   npm install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. **Salin file konfigurasi environment**
+   ```bash
+   cp .env.example .env
+   ```
 
-## Code of Conduct
+4. **Konfigurasi Database**
+   Buka file `.env` di teks editor, lalu sesuaikan konfigurasi database Anda. Contoh:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=gadget_rent
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+   *(Pastikan Anda sudah membuat database kosong bernama `gadget_rent` di MySQL/phpMyAdmin).*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. **Generate App Key**
+   ```bash
+   php artisan key:generate
+   ```
 
-## Security Vulnerabilities
+6. **Jalankan Migrasi dan Seeder (Untuk mendapatkan data awal/dummy)**
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+7. **Jalankan Server Lokal & Build Asset**
+   Buka dua terminal terpisah, lalu jalankan:
+   ```bash
+   # Terminal 1: Menjalankan server backend
+   php artisan serve
 
-## License
+   # Terminal 2: Menjalankan/compile asset frontend (Tailwind)
+   npm run dev
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+8. Buka browser dan akses aplikasi melalui `http://localhost:8000`.
+
+---
+
+## 🔑 Akun Default (Login)
+
+Setelah instalasi dan proses `seeder` selesai, Anda dapat mencoba login menggunakan akun-akun *default* di bawah ini:
+
+| Role / Akses | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | `admin@example.com` | `password` |
+| **Staff** | `staff@example.com` | `password` |
+| **Customer** | `sultan123@gmail.com` | `password` |
+
+---
+
+## 📊 Entity Relationship Diagram (ERD)
+
+![ERD GadgetRent](screenshots/ERD.jpeg)
+
+---
+
+## 📸 Screenshot Aplikasi
+
+### 1. Halaman Login
+![Login](screenshots/login.png)
+
+### 2. Dashboard Admin
+![Dashboard](screenshots/dashboard-admin.png)
+
+### 3. List Data (CRUD Gadget)
+![List Data](screenshots/halaman-gadget.png)
+
+### 4. Form Tambah Data (Gadget)
+![Form Tambah](screenshots/tambah-gadget.png)
+
+### 5. Halaman Error 404 (Not Found)
+![Error 404](screenshots/404-not-found.png)
+
+
+*Dibuat untuk memenuhi Tugas/Proyek Perkuliahan.*
