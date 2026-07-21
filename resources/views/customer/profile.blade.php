@@ -159,12 +159,14 @@
                     <div class="space-y-6" x-data="{
                         isUploading: false,
                         uploadError: '',
+                        successData: null,
                         handleUpload(e) {
                             let file = e.target.files[0];
                             if(!file) return;
 
                             this.isUploading = true;
                             this.uploadError = '';
+                            this.successData = null;
 
                             let formData = new FormData();
                             formData.append('ktp_image', file);
@@ -181,7 +183,7 @@
                             .then(data => {
                                 this.isUploading = false;
                                 if(data.success) {
-                                    window.location.reload();
+                                    this.successData = data.data;
                                 } else {
                                     this.uploadError = data.message || 'Gagal mengupload KTP';
                                 }
@@ -215,6 +217,60 @@
                                     <span class="text-[10px] text-[#556075] font-mono block mb-4">Diunggah {{ \Carbon\Carbon::parse(auth()->user()->ktp_verified_at)->format('d M Y') }} • Terverifikasi</span>
                                 </div>
                             </div>
+
+                            {{-- Ringkasan data KTP yang tersimpan --}}
+                            <div class="bg-[#13161e] border border-[#1a1f29] rounded-xl p-5">
+                                <p class="text-[10px] font-bold text-[#475166] uppercase tracking-wider mb-4">Data Terverifikasi dari KTP</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                    @if(auth()->user()->nik)
+                                    <div>
+                                        <span class="text-[#556075] font-medium block mb-0.5">NIK</span>
+                                        <span class="text-white font-bold font-mono">{{ auth()->user()->nik }}</span>
+                                    </div>
+                                    @endif
+                                    @if(auth()->user()->name)
+                                    <div>
+                                        <span class="text-[#556075] font-medium block mb-0.5">Nama</span>
+                                        <span class="text-white font-bold">{{ auth()->user()->name }}</span>
+                                    </div>
+                                    @endif
+                                    @if(auth()->user()->gender)
+                                    <div>
+                                        <span class="text-[#556075] font-medium block mb-0.5">Jenis Kelamin</span>
+                                        <span class="text-white font-bold">{{ auth()->user()->gender }}</span>
+                                    </div>
+                                    @endif
+                                    @if(auth()->user()->province)
+                                    <div>
+                                        <span class="text-[#556075] font-medium block mb-0.5">Provinsi</span>
+                                        <span class="text-white font-bold">{{ auth()->user()->province }}</span>
+                                    </div>
+                                    @endif
+                                    @if(auth()->user()->city)
+                                    <div>
+                                        <span class="text-[#556075] font-medium block mb-0.5">Kota / Kabupaten</span>
+                                        <span class="text-white font-bold">{{ auth()->user()->city }}</span>
+                                    </div>
+                                    @endif
+                                    @if(auth()->user()->district)
+                                    <div>
+                                        <span class="text-[#556075] font-medium block mb-0.5">Kecamatan</span>
+                                        <span class="text-white font-bold">{{ auth()->user()->district }}</span>
+                                    </div>
+                                    @endif
+                                    @if(auth()->user()->address_detail)
+                                    <div class="md:col-span-2">
+                                        <span class="text-[#556075] font-medium block mb-0.5">Alamat Lengkap</span>
+                                        <span class="text-white font-bold">{{ auth()->user()->address_detail }}</span>
+                                    </div>
+                                    @endif
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-[#1a1f29]">
+                                    <a href="{{ route('addresses.index') }}" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#e49322] hover:underline">
+                                        Lihat & Edit Alamat →
+                                    </a>
+                                </div>
+                            </div>
                         @else
                             <div class="flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-red-400">
                                 <div class="flex-shrink-0 bg-red-500/20 rounded-full p-1">
@@ -222,7 +278,7 @@
                                 </div>
                                 <div class="text-xs">
                                     <span class="font-bold mr-2">Belum Diverifikasi</span>
-                                    <span class="text-red-300 font-medium">Unggah KTP kamu untuk memverifikasi akun dan melengkapi data otomatis.</span>
+                                    <span class="text-red-300 font-medium">Unggah KTP kamu untuk mengisi Nama, NIK, Jenis Kelamin, dan Alamat secara otomatis.</span>
                                 </div>
                             </div>
                             
@@ -231,7 +287,70 @@
                                 
                                 <div x-show="uploadError" x-text="uploadError" class="mb-4 text-xs text-red-400 bg-red-500/10 p-3 rounded-lg"></div>
 
-                                <label class="border border-dashed border-[#242b38] hover:border-[#e49322] bg-[#161922] p-8 rounded-xl text-center flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition relative overflow-hidden group">
+                                {{-- Kartu hasil sukses OCR (muncul setelah scan berhasil) --}}
+                                <div x-show="successData" x-cloak class="mb-4 bg-[#1c2e24]/60 border border-[#234e34] rounded-xl p-5">
+                                    <div class="flex items-center gap-2 mb-4">
+                                        <div class="bg-[#234e34] rounded-full p-1">
+                                            <svg class="w-3.5 h-3.5 text-[#4ade80]" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        </div>
+                                        <span class="text-xs font-bold text-[#4ade80]">KTP Berhasil Diverifikasi!</span>
+                                        <span class="text-[10px] text-[#86efac]/70 font-mono ml-1">Data otomatis terisi dari KTP</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                                        <template x-if="successData && successData.nik">
+                                            <div>
+                                                <span class="text-[#556075] font-medium block mb-0.5">NIK</span>
+                                                <span class="text-white font-bold font-mono" x-text="successData.nik"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="successData && successData.name">
+                                            <div>
+                                                <span class="text-[#556075] font-medium block mb-0.5">Nama</span>
+                                                <span class="text-white font-bold" x-text="successData.name"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="successData && successData.gender">
+                                            <div>
+                                                <span class="text-[#556075] font-medium block mb-0.5">Jenis Kelamin</span>
+                                                <span class="text-white font-bold" x-text="successData.gender"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="successData && successData.province">
+                                            <div>
+                                                <span class="text-[#556075] font-medium block mb-0.5">Provinsi</span>
+                                                <span class="text-white font-bold" x-text="successData.province"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="successData && successData.city">
+                                            <div>
+                                                <span class="text-[#556075] font-medium block mb-0.5">Kota / Kabupaten</span>
+                                                <span class="text-white font-bold" x-text="successData.city"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="successData && successData.district">
+                                            <div>
+                                                <span class="text-[#556075] font-medium block mb-0.5">Kecamatan</span>
+                                                <span class="text-white font-bold" x-text="successData.district"></span>
+                                            </div>
+                                        </template>
+                                        <template x-if="successData && successData.address_detail">
+                                            <div class="md:col-span-2">
+                                                <span class="text-[#556075] font-medium block mb-0.5">Alamat Lengkap</span>
+                                                <span class="text-white font-bold" x-text="successData.address_detail"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="mt-4 pt-4 border-t border-[#234e34]/60 flex gap-3">
+                                        <a href="{{ route('addresses.index') }}" class="bg-[#e49322] hover:bg-[#c97e1b] text-black font-extrabold text-xs px-4 py-2 rounded-lg transition">
+                                            Lihat Alamat Saya →
+                                        </a>
+                                        <button type="button" onclick="window.location.reload()" class="bg-[#1a1f29] border border-[#242b38] text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-[#202531] transition">
+                                            Refresh Halaman
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <label x-show="!successData" class="border border-dashed border-[#242b38] hover:border-[#e49322] bg-[#161922] p-8 rounded-xl text-center flex flex-col items-center justify-center min-h-[160px] cursor-pointer transition relative overflow-hidden group">
                                     <input type="file" class="hidden" accept="image/*" @change="handleUpload">
                                     
                                     <div x-show="!isUploading" class="flex flex-col items-center">
@@ -240,6 +359,7 @@
                                         </div>
                                         <span class="text-sm text-white font-bold block mb-1">Klik untuk memilih file</span>
                                         <span class="text-xs text-[#556075]">JPG/PNG maksimal 5MB</span>
+                                        <span class="text-[10px] text-[#475166] mt-2 font-mono">OCR akan mengisi: NIK · Nama · Jenis Kelamin · Alamat</span>
                                     </div>
                                     
                                     <div x-show="isUploading" class="flex flex-col items-center">
@@ -248,7 +368,7 @@
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
                                         <span class="text-sm text-white font-bold block mb-1 animate-pulse">Memverifikasi Identitas...</span>
-                                        <span class="text-xs text-[#e49322]">Mengekstrak NIK dan Nama otomatis</span>
+                                        <span class="text-xs text-[#e49322]">Mengekstrak NIK, Nama, Kelamin, dan Alamat</span>
                                     </div>
                                 </label>
                             </div>

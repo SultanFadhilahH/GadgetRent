@@ -138,20 +138,26 @@ class ProfileController extends Controller
             }
 
             // --- PARSING DATA KTP ---
-            $lines  = explode("\n", $fullText);
-            $nik    = null;
-            $nama   = null;
-            $gender = null;
+            $lines         = explode("\n", $fullText);
+            $nik           = null;
+            $nama          = null;
+            $gender        = null;
+            $alamat        = null;   // Alamat/jalan detail
+            $rtRw          = null;   // RT/RW
+            $kelurahan     = null;   // Kel/Desa
+            $kecamatan     = null;   // Kecamatan
+            $kotaKab       = null;   // Kabupaten/Kota
+            $provinsi      = null;   // Provinsi
 
             foreach ($lines as $i => $line) {
                 $lineTrim = trim($line);
 
-                // Cari NIK: 16 digit angka (bisa ada prefix "NIK :" atau langsung)
+                // --- NIK: 16 digit angka ---
                 if (!$nik && preg_match('/\b(\d{16})\b/', $lineTrim, $matches)) {
                     $nik = $matches[1];
                 }
 
-                // Cari Nama (label: "Nama", "Nama :", dst)
+                // --- Nama ---
                 if (!$nama && preg_match('/^nama\s*[:\-]?\s*(.+)/i', $lineTrim, $m)) {
                     $candidate = trim(preg_replace('/[^a-zA-Z\s]/', '', $m[1]));
                     if (strlen($candidate) > 2) {
@@ -164,12 +170,10 @@ class ProfileController extends Controller
                     }
                 }
 
-                // Cari Jenis Kelamin
-                // Menangani format Indonesia (LAKI-LAKI/PEREMPUAN) & Inggris (MALE/FEMALE)
+                // --- Jenis Kelamin ---
                 if (!$gender) {
                     $upper = strtoupper($lineTrim);
                     if (stripos($lineTrim, 'Kelamin') !== false || stripos($lineTrim, 'Jenis') !== false) {
-                        // Cek di baris yang sama
                         if (str_contains($upper, 'LAKI-LAKI') || str_contains($upper, 'LAKI LAKI')) {
                             $gender = 'Laki-laki';
                         } elseif (str_contains($upper, 'PEREMPUAN')) {
@@ -191,13 +195,74 @@ class ProfileController extends Controller
                         }
                     }
                 }
+
+                // --- Alamat (Jalan + nomor rumah) ---
+                if (!$alamat && preg_match('/^alamat\s*[:\-]?\s*(.+)/i', $lineTrim, $m)) {
+                    $candidate = trim($m[1]);
+                    if (strlen($candidate) > 3) {
+                        $alamat = $candidate;
+                    } elseif (isset($lines[$i + 1])) {
+                        $next = trim($lines[$i + 1]);
+                        if (strlen($next) > 3 && !preg_match('/^(RT|RW|Kel|Desa|Kec|Kab|Kota|Prov|Agama|Gol|NIK|Nama|Tempat|Tgl|Masa)/i', $next)) {
+                            $alamat = $next;
+                        }
+                    }
+                }
+
+                // --- RT/RW (format: RT/RW : 005/003 atau RT 005 RW 003) ---
+                if (!$rtRw && preg_match('/RT\s*[\/\-]?\s*RW\s*[:\-]?\s*(\d{1,3}[\s\/\-]+\d{1,3})/i', $lineTrim, $m)) {
+                    $rtRw = trim(preg_replace('/\s+/', ' ', $m[1]));
+                }
+                if (!$rtRw && preg_match('/\bRT\s*[\/\.]\s*(\d+)\s*[\/\.]\s*(\d+)/i', $lineTrim, $m)) {
+                    $rtRw = $m[1] . '/' . $m[2];
+                }
+
+                // --- Kelurahan / Desa ---
+                if (!$kelurahan && preg_match('/^(?:kel(?:urahan)?|desa)\s*[:\-]?\s*(.+)/i', $lineTrim, $m)) {
+                    $candidate = trim(preg_replace('/[^a-zA-Z\s]/', '', $m[1]));
+                    if (strlen($candidate) > 2) $kelurahan = $candidate;
+                }
+
+                // --- Kecamatan ---
+                if (!$kecamatan && preg_match('/^kec(?:amatan)?\s*[:\-]?\s*(.+)/i', $lineTrim, $m)) {
+                    $candidate = trim(preg_replace('/[^a-zA-Z\s]/', '', $m[1]));
+                    if (strlen($candidate) > 2) $kecamatan = $candidate;
+                }
+
+                // --- Kabupaten / Kota ---
+                if (!$kotaKab && preg_match('/^(?:kab(?:upaten)?|kota)\s*[:\-]?\s*(.+)/i', $lineTrim, $m)) {
+                    $candidate = trim(preg_replace('/[^a-zA-Z\s]/', '', $m[1]));
+                    if (strlen($candidate) > 2) $kotaKab = $candidate;
+                }
+
+                // --- Provinsi ---
+                if (!$provinsi && preg_match('/^(?:provinsi|propinsi|province)\s*[:\-]?\s*(.+)/i', $lineTrim, $m)) {
+                    $candidate = trim(preg_replace('/[^a-zA-Z\s]/', '', $m[1]));
+                    if (strlen($candidate) > 2) $provinsi = $candidate;
+                }
+                if (!$provinsi && preg_match('/provinsi\s+([A-Z\s]+)/i', $lineTrim, $m)) {
+                    $candidate = trim(preg_replace('/[^a-zA-Z\s]/', '', $m[1]));
+                    if (strlen($candidate) > 2) $provinsi = $candidate;
+                }
             }
 
-            // Simpan ke profil user
+            // --- Susun address_detail: Jalan + RT/RW + Kel + Kec ---
+            $addressParts = [];
+            if ($alamat)    $addressParts[] = $alamat;
+            if ($rtRw)      $addressParts[] = 'RT/RW ' . $rtRw;
+            if ($kelurahan) $addressParts[] = 'Kel. ' . ucwords(strtolower($kelurahan));
+            if ($kecamatan) $addressParts[] = 'Kec. ' . ucwords(strtolower($kecamatan));
+            $addressDetail = implode(', ', $addressParts);
+
+            // --- Simpan ke profil user ---
             $user = $request->user();
-            if ($nik)    $user->nik    = $nik;
-            if ($nama)   $user->name   = ucwords(strtolower($nama));
-            if ($gender) $user->gender = $gender;
+            if ($nik)          $user->nik            = $nik;
+            if ($nama)         $user->name           = ucwords(strtolower($nama));
+            if ($gender)       $user->gender         = $gender;
+            if ($provinsi)     $user->province       = ucwords(strtolower($provinsi));
+            if ($kotaKab)      $user->city           = ucwords(strtolower($kotaKab));
+            if ($kecamatan)    $user->district       = ucwords(strtolower($kecamatan));
+            if ($addressDetail) $user->address_detail = $addressDetail;
 
             $user->ktp_image_path  = $path;
             $user->ktp_verified_at = now();
@@ -210,6 +275,10 @@ class ProfileController extends Controller
                     'nik'            => $user->nik,
                     'name'           => $user->name,
                     'gender'         => $user->gender,
+                    'province'       => $user->province,
+                    'city'           => $user->city,
+                    'district'       => $user->district,
+                    'address_detail' => $user->address_detail,
                     'ktp_image_path' => $user->ktp_image_path,
                 ],
             ]);
@@ -219,3 +288,4 @@ class ProfileController extends Controller
         }
     }
 }
+
