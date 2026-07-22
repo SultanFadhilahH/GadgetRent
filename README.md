@@ -139,5 +139,10 @@ Setelah instalasi dan proses `seeder` selesai, Anda dapat mencoba login mengguna
 ### 5. Halaman Error 404 (Not Found)
 ![Error 404](screenshots/404-not-found.png)
 
+---
+
+## Demo Aplikasi
+[Tonton Video Demo Aplikasi di YouTube](https://youtu.be/c7Bly8d0Jt8)
+
 
 *Dibuat untuk memenuhi Tugas/Proyek Perkuliahan.*
